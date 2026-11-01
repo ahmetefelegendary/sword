@@ -1,0 +1,31 @@
+{
+  "appId": "com.zindansovalyesi.game",
+  "appName": "Dungeon Knight: Pixel RPG",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "backgroundColor": "#090d16",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#090d16",
+    "allowsLinkPreview": false,
+    "scrollEnabled": false
+  },
+  "android": {
+    "backgroundColor": "#090d16",
+    "allowMixedContent": false,
+    "overScrollMode": "never"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#090d16",
+      "overlaysWebView": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "launchAutoHide": true,
+      "backgroundColor": "#090d16",
+      "showSpinner": false
+    }
+  }
+}

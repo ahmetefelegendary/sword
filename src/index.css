@@ -1,0 +1,103 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .font-pixel {
+    font-family: 'Press Start 2P', monospace, system-ui;
+  }
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* CRT scanlines effect (optional aesthetic overlay) */
+.crt-overlay {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Authentic 16-bit / GBA Pixel UI Frames */
+.pixel-panel {
+  background-color: #12141d;
+  border: 2px solid #000000;
+  box-shadow: 
+    inset 2px 2px 0px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.65),
+    0 3px 0px rgba(0, 0, 0, 0.6);
+}
+
+.pixel-panel-gold {
+  background-color: #1d1710;
+  border: 2px solid #000000;
+  box-shadow: 
+    inset 2px 2px 0px rgba(245, 158, 11, 0.25),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.75),
+    0 3px 0px rgba(0, 0, 0, 0.6);
+}
+
+.pixel-panel-red {
+  background-color: #221014;
+  border: 2px solid #000000;
+  box-shadow: 
+    inset 2px 2px 0px rgba(239, 68, 68, 0.25),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.75),
+    0 3px 0px rgba(0, 0, 0, 0.6);
+}
+
+/* Tactile Arcade Gamepad Buttons */
+.arcade-btn {
+  border: 2px solid #000000;
+  box-shadow: 
+    inset 2px 2px 0px rgba(255, 255, 255, 0.3),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.5),
+    0 4px 0px #000000;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.arcade-btn:active {
+  transform: translateY(3px);
+  box-shadow: 
+    inset 2px 2px 0px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 0px rgba(255, 255, 255, 0.15),
+    0 1px 0px #000000;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  background-color: #090d16;
+  color: #f1f5f9;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* iOS Notch / Dynamic Island & Android Gesture Bar Safe Areas */
+.pt-safe {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+.pb-safe {
+  padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
+}
+.pl-safe {
+  padding-left: max(0.5rem, env(safe-area-inset-left));
+}
+.pr-safe {
+  padding-right: max(0.5rem, env(safe-area-inset-right));
+}

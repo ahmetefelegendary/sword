@@ -1,0 +1,6 @@
+{
+  "name": "Dungeon Knight",
+  "description": "Zindan Şövalyesi (Dungeon Knight) - 2D retro pixel art hack & slash dungeon crawler with smooth 360-degree virtual analog joystick controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

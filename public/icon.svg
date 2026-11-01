@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <rect width="64" height="64" rx="12" fill="#090d16"/>
+  <rect x="4" y="4" width="56" height="56" rx="8" fill="#121726" stroke="#f59e0b" stroke-width="4"/>
+  <!-- Pixel Shield Backing -->
+  <path d="M18 14h28v20c0 10-14 16-14 16S18 44 18 34V14z" fill="#1e293b"/>
+  <!-- Pixel Broadsword -->
+  <rect x="30" y="10" width="4" height="28" fill="#e2e8f0"/>
+  <rect x="30" y="10" width="2" height="28" fill="#ffffff"/>
+  <rect x="22" y="36" width="20" height="4" fill="#f59e0b"/>
+  <rect x="29" y="40" width="6" height="8" fill="#92400e"/>
+  <rect x="28" y="48" width="8" height="4" fill="#f59e0b"/>
+</svg>
