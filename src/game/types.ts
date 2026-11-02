@@ -91,6 +91,7 @@ export interface Enemy {
   targetX: number;
   targetY: number;
   attackCooldown: number;
+  teleportCooldown?: number;
   
   // Visuals
   flashTimer: number;

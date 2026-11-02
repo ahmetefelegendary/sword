@@ -919,6 +919,7 @@ export class GameEngine {
           targetX: 0,
           targetY: 0,
           attackCooldown: 2.8 * cdScale,
+          teleportCooldown: 3.5,
           flashTimer: 0,
           scaleX: 1,
           scaleY: 1,
@@ -1518,8 +1519,22 @@ export class GameEngine {
 
       // Combo handling
       p.combo++;
-      p.comboTimer = 2.2;
+      p.comboTimer = 2.4;
       p.score += hitCount * 40 * Math.min(p.combo, 5);
+
+      // Rewarding Arcade Combo Milestones
+      if (p.combo === 5) {
+        this.addFloatingText(p.x, p.y - 32, '5x COMBO!', '#fbbf24', 1.35, true);
+        p.score += 250;
+      } else if (p.combo === 10) {
+        this.addFloatingText(p.x, p.y - 34, '10x SUPER COMBO!', '#f97316', 1.55, true);
+        p.score += 750;
+        this.cameraTrauma = Math.min(1.0, this.cameraTrauma + 0.35);
+      } else if (p.combo === 20) {
+        this.addFloatingText(p.x, p.y - 36, '20x UNSTOPPABLE!', '#a855f7', 1.85, true);
+        p.score += 2000;
+        this.cameraTrauma = Math.min(1.0, this.cameraTrauma + 0.5);
+      }
 
       // Vampire upgrade perk: Heal 1 HP every 7 combo hits
       if (p.hasVampire && p.combo % 7 === 0 && p.hp < p.maxHp) {
@@ -1848,24 +1863,100 @@ export class GameEngine {
     const p = this.player;
     const dist = Math.hypot(p.x - e.x, p.y - e.y);
 
+    if (e.teleportCooldown !== undefined && e.teleportCooldown > 0) {
+      e.teleportCooldown -= dt;
+    }
+
+    if (e.state === 'cooldown') {
+      // Dazed / recovery window after teleporting: completely vulnerable!
+      e.stateTimer -= dt;
+      // Dazed purple sparkle effect
+      if (Math.random() < 0.3) {
+        this.particles.push({
+          x: e.x + (Math.random() - 0.5) * 16,
+          y: e.y - 12 + (Math.random() - 0.5) * 16,
+          vx: (Math.random() - 0.5) * 20,
+          vy: -20 - Math.random() * 20,
+          size: 2.5,
+          color: '#e879f9',
+          alpha: 0.9,
+          life: 0,
+          maxLife: 0.3,
+        });
+      }
+      if (e.stateTimer <= 0) {
+        e.state = 'chase';
+      }
+      return;
+    }
+
     if (e.state === 'chase') {
-      if (dist < 120) {
-        // Teleport away with magic particles!
-        e.x = WALL_THICKNESS + 60 + Math.random() * (ARENA_WIDTH - WALL_THICKNESS * 2 - 120);
-        e.y = WALL_THICKNESS + 60 + Math.random() * (ARENA_HEIGHT - WALL_THICKNESS * 2 - 120);
-        for (let i = 0; i < 14; i++) {
+      // Smooth hovering drift: keep comfortable tactical casting distance (150-230px)
+      if (dist > 230) {
+        // Slowly float closer towards player
+        const ang = Math.atan2(p.y - e.y, p.x - e.x);
+        e.x += Math.cos(ang) * e.speed * dt * 0.75;
+        e.y += Math.sin(ang) * e.speed * dt * 0.75;
+      } else if (dist < 100 && (e.teleportCooldown || 0) > 0) {
+        // Slowly float backwards away if teleport is on cooldown (player can catch up with dash/sprint!)
+        const ang = Math.atan2(e.y - p.y, e.x - p.x);
+        e.x += Math.cos(ang) * e.speed * dt * 0.8;
+        e.y += Math.sin(ang) * e.speed * dt * 0.8;
+      }
+
+      // Tactical Blink: ONLY if player gets within point-blank melee strike range (dist < 58) AND cooldown is ready!
+      if (dist < 58 && (!e.teleportCooldown || e.teleportCooldown <= 0)) {
+        // Spawn puff at departure location
+        for (let i = 0; i < 16; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = 30 + Math.random() * 80;
           this.particles.push({
             x: e.x,
             y: e.y,
-            vx: (Math.random() - 0.5) * 120,
-            vy: (Math.random() - 0.5) * 120,
-            size: 3,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            size: 3.5,
             color: '#c084fc',
             alpha: 1,
             life: 0,
             maxLife: 0.35,
           });
         }
+
+        // Tactical blink 150-180px away from player (not across entire universe!)
+        const escapeAngle = Math.atan2(e.y - p.y, e.x - p.x) + (Math.random() - 0.5) * 0.8;
+        const blinkDist = 150 + Math.random() * 35;
+        const targetX = p.x + Math.cos(escapeAngle) * blinkDist;
+        const targetY = p.y + Math.sin(escapeAngle) * blinkDist;
+
+        // Keep inside arena boundaries
+        e.x = Math.max(WALL_THICKNESS + 40, Math.min(ARENA_WIDTH - WALL_THICKNESS - 40, targetX));
+        e.y = Math.max(WALL_THICKNESS + 40, Math.min(ARENA_HEIGHT - WALL_THICKNESS - 40, targetY));
+
+        // Spawn puff at arrival location
+        for (let i = 0; i < 16; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = 20 + Math.random() * 60;
+          this.particles.push({
+            x: e.x,
+            y: e.y,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            size: 3,
+            color: '#a855f7',
+            alpha: 1,
+            life: 0,
+            maxLife: 0.35,
+          });
+        }
+
+        audio.playDash('mage');
+
+        // Set cooldown and recovery window: 4.8s teleport cooldown, 0.65s dazed recovery!
+        e.teleportCooldown = 4.8;
+        e.state = 'cooldown';
+        e.stateTimer = 0.65;
+        return;
       }
 
       if (e.attackCooldown <= 0) {
@@ -1877,9 +1968,10 @@ export class GameEngine {
         audio.playTelegraph();
       }
     } else if (e.state === 'windup') {
+      // DURING CASTING: The mage is channel-focused and CANNOT TELEPORT!
+      // If player rushes in and strikes, it deals big damage and interrupts!
       e.telegraphTimer += dt;
       if (e.telegraphTimer >= e.telegraphMax) {
-        // Detonate magic pillar at target area
         audio.playHit(true);
         this.cameraTrauma = 0.45;
         const blastDist = Math.hypot(p.x - e.targetX, p.y - e.targetY);
@@ -1887,7 +1979,6 @@ export class GameEngine {
           this.hurtPlayer(1);
         }
 
-        // Purple blast particles
         for (let i = 0; i < 20; i++) {
           const ang = Math.random() * Math.PI * 2;
           const spd = 60 + Math.random() * 80;
@@ -2128,6 +2219,16 @@ export class GameEngine {
         life: 0,
         maxLife: isCrit ? 0.28 : 0.2,
       });
+    }
+
+    this.hitstopTimer = Math.max(this.hitstopTimer, isCrit ? 0.045 : 0.025);
+
+    // Mage Spell Interruption: Striking a casting mage interrupts the rune!
+    if (enemy.type === 'MAGE' && enemy.state === 'windup') {
+      enemy.state = 'hurt';
+      enemy.stateTimer = 0.45;
+      this.addFloatingText(enemy.x, enemy.y - 26, 'BÜYÜ BOZULDU!', '#e879f9', 1.3, true);
+      audio.playHit(true);
     }
 
     if (stunTime > 0 && !enemy.isBoss) {
@@ -2541,6 +2642,18 @@ export class GameEngine {
         ctx.font = 'bold 9px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
         ctx.fillText('!', enemy.x, enemy.y - 20);
+      }
+
+      // Dazed / Exhausted indicator for Mage after teleporting
+      if (enemy.state === 'cooldown' && enemy.type === 'MAGE') {
+        ctx.fillStyle = '#a855f7';
+        ctx.beginPath();
+        ctx.arc(enemy.x, enemy.y - 24, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 7px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('Zz', enemy.x, enemy.y - 20);
       }
     }
 
