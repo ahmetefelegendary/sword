@@ -2599,9 +2599,10 @@ export class GameEngine {
       this.renderDungeonArchitecture(ctx);
     }
 
-    // 2. Draw Breakable Props & Torches
+    // 2. Draw Breakable Props & Torches (With Ground Contact Shadows)
     for (const prop of this.props) {
       if (prop.hp > 0 || (prop.type === 'chest' && prop.opened)) {
+        spriteRenderer.drawDropShadow(ctx, prop.x, prop.y + 7, 8, 3.5, 0.35);
         spriteRenderer.drawProp(ctx, prop.type, prop.x, prop.y, prop.opened);
       }
     }
@@ -2609,13 +2610,22 @@ export class GameEngine {
     // 3. Draw Enemy Telegraphs on floor (e.g. Red aim lines, magic explosion circles)
     this.renderTelegraphs(ctx);
 
-    // 4. Draw Pickups
+    // 4. Draw Pickups (With Dynamic Floating Shadows)
     for (const pickup of this.pickups) {
+      const bob = Math.sin(pickup.bobTimer * 4);
+      const sScale = Math.max(0.65, 1 - bob * 0.15);
+      spriteRenderer.drawDropShadow(ctx, pickup.x, pickup.y + 7, 5 * sScale, 2.5 * sScale, 0.3);
       spriteRenderer.drawPickup(ctx, pickup.type, pickup.x, pickup.y, pickup.bobTimer);
     }
 
-    // 5. Draw Enemies
+    // 5. Draw Enemies (With Ground Contact Shadows & Health Bars)
     for (const enemy of this.enemies) {
+      const isBoss = enemy.type === 'BOSS_GOLEM';
+      const shadowW = isBoss ? 24 : enemy.width * 0.45;
+      const shadowH = isBoss ? 8 : 3.8;
+      const shadowY = isBoss ? enemy.y + 24 : enemy.y + enemy.height / 2 - 2;
+      spriteRenderer.drawDropShadow(ctx, enemy.x, shadowY, shadowW, shadowH, isBoss ? 0.5 : 0.36);
+
       spriteRenderer.drawEnemy(ctx, enemy);
 
       // Mini Health Bar for Boss or damaged enemies
@@ -2670,11 +2680,13 @@ export class GameEngine {
       );
     }
 
-    // 6. Draw Player (With Attack Lunge, Idle Breathing & Hurt Recoil)
+    // 6. Draw Player (With Ground Drop Shadow, Attack Lunge & Idle Breathing)
     const p = this.player;
     const isAttacking = p.isAttacking;
     const attackProgress = isAttacking ? Math.max(0, Math.min(1, 1 - p.attackTimer / 0.18)) : 0;
     const isIdle = (p.vx === 0 && p.vy === 0 && !p.isDashing);
+
+    spriteRenderer.drawDropShadow(ctx, p.x, p.y + 12, 10, 4.2, 0.42);
 
     spriteRenderer.drawPlayer(
       ctx,
@@ -3285,14 +3297,29 @@ export class GameEngine {
       15,
       this.player.x,
       this.player.y,
-      130
+      135
     );
-    pGrad.addColorStop(0, 'rgba(56, 189, 248, 0.12)');
+    pGrad.addColorStop(0, 'rgba(56, 189, 248, 0.14)');
     pGrad.addColorStop(1, 'rgba(56, 189, 248, 0)');
     ctx.fillStyle = pGrad;
     ctx.beginPath();
-    ctx.arc(this.player.x, this.player.y, 130, 0, Math.PI * 2);
+    ctx.arc(this.player.x, this.player.y, 135, 0, Math.PI * 2);
     ctx.fill();
+
+    // Atmospheric Cinematic Dungeon Vignette (Pulls focus to arena center & creates depth)
+    const vigGrad = ctx.createRadialGradient(
+      this.player.x,
+      this.player.y,
+      ARENA_WIDTH * 0.16,
+      this.player.x,
+      this.player.y,
+      ARENA_WIDTH * 0.58
+    );
+    vigGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    vigGrad.addColorStop(0.7, 'rgba(5, 8, 15, 0.22)');
+    vigGrad.addColorStop(1, 'rgba(3, 7, 18, 0.54)');
+    ctx.fillStyle = vigGrad;
+    ctx.fillRect(0, 0, ARENA_WIDTH, ARENA_HEIGHT);
   }
 }
 

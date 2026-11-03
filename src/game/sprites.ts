@@ -1,6 +1,20 @@
 /**
  * Pixel Art Generator and Sprite Cache
- * Pre-renders pixel-perfect sprites to offscreen canvases for crisp 60fps performance.
+ * Pre-renders high-detail, retro arcade pixel sprites to offscreen canvases for crisp 60fps performance.
+ *
+ * Visual Upgrades:
+ * - 32x34 High-Detail Characters:
+ *   - Knight: Golden lion crest helm, glowing cyan visor slit, crimson fluttering cape, broadsword & heater shield
+ *   - Rogue: Twin venom emerald daggers, shadow mask with cat-eyes, twin-tailed assassin cloak
+ *   - Mage: Starry starlight archmage robes with gold runes, wizard hat, ancient staff with pulsating crystal orb
+ * - High-Detail Enemies:
+ *   - Slime: Glossy translucent highlight, bouncy squish & stretch
+ *   - Skeleton Archer: Ribcage cavity, bone recurve bow with nocked arrow, glowing crimson eye sockets
+ *   - Goblin Berserker: Horned horned war helmet, flaming rage eyes, dual-serrated executioner axe
+ *   - Dark Mage: Animated 2-frame floating hover, cursed warlock cowl, skull-topped staff with void flame
+ *   - Boss Golem: Massive textured stone titan with glowing cyan core & enraged molten magma fissures
+ * - Smooth Ground Contact Drop Shadows for all entities (Player, Enemies, Pickups, Props)
+ * - Premium Arcade Combat Slash Effects (Golden cleave, venom cross-cut, arcane cosmic blast)
  */
 
 import { Facing, EnemyType, HeroClass, DungeonBiomeId } from './types';
@@ -23,12 +37,12 @@ export class SpriteRenderer {
   }
 
   private prebakeSprites() {
-    // 1. Player Walk & Idle Frames for Knight, Rogue, and Mage
+    // 1. Player Walk & Idle Frames for Knight, Rogue, and Mage (4 animated walk frames each)
     const classes: HeroClass[] = ['knight', 'rogue', 'mage'];
     for (const hc of classes) {
       for (let f = 0; f < 4; f++) {
         this.bakePlayer(hc, f, false);
-        this.bakePlayer(hc, f, true); // flash state
+        this.bakePlayer(hc, f, true); // flash hit state
       }
     }
 
@@ -38,19 +52,23 @@ export class SpriteRenderer {
     this.bakeSlime('MINI_SLIME', false);
     this.bakeSlime('MINI_SLIME', true);
 
-    // 3. Skeleton Archer
+    // 3. Skeleton Archer (2 animated frames)
     this.bakeSkeleton(0, false);
     this.bakeSkeleton(1, false);
     this.bakeSkeleton(0, true);
+    this.bakeSkeleton(1, true);
 
-    // 4. Goblin Berserker
+    // 4. Goblin Berserker (2 animated frames)
     this.bakeBerserker(0, false);
     this.bakeBerserker(1, false);
     this.bakeBerserker(0, true);
+    this.bakeBerserker(1, true);
 
-    // 5. Dark Mage
+    // 5. Dark Mage (2 animated floating frames)
     this.bakeMage(0, false);
+    this.bakeMage(1, false);
     this.bakeMage(0, true);
+    this.bakeMage(1, true);
 
     // 6. Boss Golem (Normal and Enraged)
     this.bakeBossGolem(false, false);
@@ -71,141 +89,312 @@ export class SpriteRenderer {
     this.bakeBoulder();
   }
 
-  // --- PLAYER SPRITES FOR 3 CLASSES ---
+  // --- 1. PLAYER SPRITES (32x34 High-Detail Characters) ---
   private bakePlayer(heroClass: HeroClass, frame: number, isFlash: boolean) {
-    const [canvas, ctx] = this.createOffscreen(26, 30);
+    const [canvas, ctx] = this.createOffscreen(32, 34);
     const key = `player_${heroClass}_${frame}_${isFlash ? 'flash' : 'normal'}`;
 
     if (isFlash) {
-      // Solid white silhouette
+      // Solid bright white/gold silhouette for crisp hit flash
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(7, 4, 12, 10); // head
-      ctx.fillRect(5, 12, 16, 10); // body
-      ctx.fillRect(7, 22, 4, 6); // left leg
-      ctx.fillRect(15, 22, 4, 6); // right leg
+      ctx.fillRect(8, 4, 16, 12); // head & helm
+      ctx.fillRect(6, 14, 20, 11); // torso & shoulders
+      ctx.fillRect(9, 25, 5, 8); // left leg
+      ctx.fillRect(17, 25, 5, 8); // right leg
       this.cache.set(key, canvas);
       return;
     }
 
     const bob = frame % 2 === 1 ? 1 : 0;
-    const legOffset = frame === 1 ? 2 : frame === 3 ? -2 : 0;
+    const legOffset = frame === 1 ? 2.5 : frame === 3 ? -2.5 : 0;
+    const capeFlutter = frame === 1 ? -2 : frame === 3 ? 2 : 0;
 
     if (heroClass === 'knight') {
-      // Cape (crimson)
+      // --- CAPE (Royal Crimson with Wind Flutter) ---
+      ctx.fillStyle = '#7f1d1d';
+      ctx.fillRect(4 + capeFlutter, 12 + bob, 5, 14);
       ctx.fillStyle = '#991b1b';
-      ctx.fillRect(4, 11 + bob, 4, 11);
+      ctx.fillRect(5 + capeFlutter, 13 + bob, 4, 13);
       ctx.fillStyle = '#dc2626';
-      ctx.fillRect(5, 12 + bob, 3, 10);
+      ctx.fillRect(6 + capeFlutter, 14 + bob, 3, 11);
+      ctx.fillStyle = '#f59e0b'; // golden bottom hem
+      ctx.fillRect(4 + capeFlutter, 25 + bob, 5, 2);
 
-      // Silver Helmet
-      ctx.fillStyle = '#475569';
-      ctx.fillRect(7, 3 + bob, 12, 10);
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillRect(8, 4 + bob, 10, 8);
-      ctx.fillStyle = '#cbd5e1';
-      ctx.fillRect(9, 4 + bob, 6, 2); // highlight
-
-      // Helmet plume (golden crest)
-      ctx.fillStyle = '#f59e0b';
-      ctx.fillRect(11, 1 + bob, 4, 3);
-      ctx.fillStyle = '#fbbf24';
-      ctx.fillRect(12, 0 + bob, 2, 2);
-
-      // Visor slit
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(9, 8 + bob, 9, 3);
-      ctx.fillStyle = '#38bdf8';
-      ctx.fillRect(11, 9 + bob, 6, 1); // glowing eyes
-
-      // Steel Chest Armor
-      ctx.fillStyle = '#334155';
-      ctx.fillRect(7, 13 + bob, 12, 9);
-      ctx.fillStyle = '#64748b';
-      ctx.fillRect(8, 14 + bob, 10, 7);
-      ctx.fillStyle = '#f59e0b'; // belt buckle
-      ctx.fillRect(11, 19 + bob, 4, 3);
-
-      // Greaves
-      ctx.fillStyle = '#334155';
-      ctx.fillRect(8, 22 + bob, 4, 5 + (legOffset > 0 ? -1 : 0));
-      ctx.fillRect(14, 22 + bob, 4, 5 + (legOffset < 0 ? -1 : 0));
-      ctx.fillStyle = '#64748b';
-      ctx.fillRect(7, 25 + bob, 5, 3);
-      ctx.fillRect(14, 25 + bob, 5, 3);
-    } else if (heroClass === 'rogue') {
-      // Dark Shadow Cloak
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(5, 10 + bob, 4, 12);
+      // --- HEAVY STEEL SABATONS (Armored Feet) ---
       ctx.fillStyle = '#1e293b';
-      ctx.fillRect(6, 11 + bob, 3, 11);
+      ctx.fillRect(10, 24 + bob, 4, 6 + (legOffset > 0 ? -1 : 1));
+      ctx.fillRect(17, 24 + bob, 4, 6 + (legOffset < 0 ? -1 : 1));
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(9, 29 + bob + (legOffset > 0 ? -1 : 0), 5, 3);
+      ctx.fillRect(17, 29 + bob + (legOffset < 0 ? -1 : 0), 5, 3);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(10, 29 + bob + (legOffset > 0 ? -1 : 0), 3, 1);
+      ctx.fillRect(18, 29 + bob + (legOffset < 0 ? -1 : 0), 3, 1);
 
-      // Rogue Leather Hood
-      ctx.fillStyle = '#14532d'; // dark forest green
-      ctx.fillRect(7, 3 + bob, 12, 10);
-      ctx.fillStyle = '#15803d';
-      ctx.fillRect(8, 4 + bob, 10, 8);
-      ctx.fillStyle = '#16a34a';
-      ctx.fillRect(9, 2 + bob, 4, 2); // hood peak
+      // --- PLATE BREASTPLATE & PAULDRONS ---
+      // Left and right shoulder pauldrons
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(7, 13 + bob, 5, 6);
+      ctx.fillRect(19, 13 + bob, 5, 6);
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(8, 14 + bob, 3, 4);
+      ctx.fillRect(20, 14 + bob, 3, 4);
+      ctx.fillStyle = '#f59e0b'; // golden rivets
+      ctx.fillRect(7, 13 + bob, 1, 1);
+      ctx.fillRect(23, 13 + bob, 1, 1);
 
-      // Shadow face & glowing emerald eyes
-      ctx.fillStyle = '#090d16';
-      ctx.fillRect(9, 8 + bob, 8, 4);
-      ctx.fillStyle = '#4ade80';
-      ctx.fillRect(10, 9 + bob, 2, 2);
-      ctx.fillRect(14, 9 + bob, 2, 2);
+      // Torso cuirass
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(10, 13 + bob, 11, 10);
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(11, 14 + bob, 9, 8);
+      ctx.fillStyle = '#cbd5e1'; // polished steel chest gleam
+      ctx.fillRect(12, 14 + bob, 3, 4);
+      ctx.fillStyle = '#f59e0b'; // golden lion insignia
+      ctx.fillRect(14, 16 + bob, 3, 3);
 
-      // Leather Jerkin & Bandolier
-      ctx.fillStyle = '#292524';
-      ctx.fillRect(7, 13 + bob, 12, 9);
-      ctx.fillStyle = '#78350f'; // leather strap
-      ctx.fillRect(8, 14 + bob, 3, 7);
-      ctx.fillRect(11, 15 + bob, 3, 6);
+      // Belt with lion buckle
+      ctx.fillStyle = '#451a03';
+      ctx.fillRect(10, 21 + bob, 11, 3);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(14, 21 + bob, 3, 3);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(15, 22 + bob, 1, 1);
 
-      // Agile Boots
-      ctx.fillStyle = '#1c1917';
-      ctx.fillRect(8, 22 + bob, 4, 5 + (legOffset > 0 ? -1 : 0));
-      ctx.fillRect(14, 22 + bob, 4, 5 + (legOffset < 0 ? -1 : 0));
-    } else if (heroClass === 'mage') {
-      // Mystical Robe
-      ctx.fillStyle = '#1e1b4b'; // deep indigo
-      ctx.fillRect(5, 11 + bob, 16, 13);
-      ctx.fillStyle = '#312e81';
-      ctx.fillRect(7, 12 + bob, 12, 11);
-      ctx.fillStyle = '#f59e0b'; // golden runic hem
-      ctx.fillRect(5, 23 + bob, 16, 2);
+      // --- GREAT HELM & GOLDEN CREST ---
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(9, 3 + bob, 13, 11);
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(10, 4 + bob, 11, 9);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(11, 4 + bob, 8, 3);
+      ctx.fillStyle = '#e2e8f0'; // bright metallic highlight
+      ctx.fillRect(12, 4 + bob, 4, 1);
 
-      // Wizard Hat
-      ctx.fillStyle = '#1e1b4b';
-      ctx.fillRect(4, 8 + bob, 18, 3); // wide brim
-      ctx.fillStyle = '#3730a3';
-      ctx.fillRect(7, 4 + bob, 12, 5);
-      ctx.fillRect(9, 1 + bob, 8, 4);
-      ctx.fillRect(11, -1 + bob, 4, 3); // hat tip
-      // Hat ribbon
+      // Golden Royal Plume / Crest
+      ctx.fillStyle = '#b45309';
+      ctx.fillRect(14, 1 + bob, 3, 3);
       ctx.fillStyle = '#f59e0b';
-      ctx.fillRect(7, 8 + bob, 12, 2);
+      ctx.fillRect(14, 0 + bob, 3, 3);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(15, -1 + bob, 2, 2);
 
-      // Mysterious face & Glowing Cyan Star Eyes
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(8, 9 + bob, 10, 4);
+      // T-Visor Slit with Cyan/Sky-Blue Glowing Eyes
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(11, 8 + bob, 10, 3);
+      ctx.fillRect(15, 9 + bob, 2, 4); // vertical nasal guard
       ctx.fillStyle = '#38bdf8';
-      ctx.fillRect(10, 10 + bob, 2, 2);
-      ctx.fillRect(14, 10 + bob, 2, 2);
+      ctx.fillRect(12, 9 + bob, 3, 1);
+      ctx.fillRect(17, 9 + bob, 3, 1);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(13, 9 + bob, 1, 1);
+      ctx.fillRect(18, 9 + bob, 1, 1);
+
+      // --- HANDHELD WEAPON (Knight's Steel Broadsword in Right Hand) ---
+      ctx.fillStyle = '#451a03'; // leather hilt
+      ctx.fillRect(25, 17 + bob, 2, 4);
+      ctx.fillStyle = '#f59e0b'; // golden pommel & crossguard
+      ctx.fillRect(24, 21 + bob, 4, 2);
+      ctx.fillRect(23, 16 + bob, 6, 2);
+      ctx.fillStyle = '#dc2626'; // ruby center gem
+      ctx.fillRect(25, 16 + bob, 2, 2);
+      // Gleaming steel blade angled upward
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(25, 6 + bob, 3, 10);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(25, 6 + bob, 2, 10);
+      ctx.fillStyle = '#ffffff'; // razor edge shine
+      ctx.fillRect(25, 5 + bob, 1, 9);
+      ctx.fillRect(26, 4 + bob, 1, 2); // sword tip
+
+      // --- HANDHELD HEATER SHIELD (Left Arm) ---
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(5, 15 + bob, 5, 8);
+      ctx.fillStyle = '#991b1b';
+      ctx.fillRect(5, 15 + bob, 4, 7);
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(6, 16 + bob, 3, 5);
+      ctx.fillStyle = '#fbbf24'; // heraldic gold cross on shield
+      ctx.fillRect(7, 16 + bob, 1, 5);
+      ctx.fillRect(6, 18 + bob, 3, 1);
+
+    } else if (heroClass === 'rogue') {
+      // --- SHADOW CLOAK & DUAL TATTERED TAILS ---
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(5 + capeFlutter, 11 + bob, 4, 13);
+      ctx.fillRect(7 + capeFlutter, 16 + bob, 3, 11);
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(6 + capeFlutter, 12 + bob, 3, 11);
+
+      // --- SLEEK ASSASSIN BOOTS ---
+      ctx.fillStyle = '#1c1917';
+      ctx.fillRect(10, 24 + bob, 4, 6 + (legOffset > 0 ? -1 : 1));
+      ctx.fillRect(17, 24 + bob, 4, 6 + (legOffset < 0 ? -1 : 1));
+      ctx.fillStyle = '#292524';
+      ctx.fillRect(10, 28 + bob + (legOffset > 0 ? -1 : 0), 4, 3);
+      ctx.fillRect(17, 28 + bob + (legOffset < 0 ? -1 : 0), 4, 3);
+
+      // --- STUDDED LEATHER JERKIN & BANDOLIER ---
+      ctx.fillStyle = '#1c1917';
+      ctx.fillRect(9, 13 + bob, 13, 10);
+      ctx.fillStyle = '#292524';
+      ctx.fillRect(10, 14 + bob, 11, 8);
+      // Leather bandolier with throwing knives
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(11, 14 + bob, 2, 7);
+      ctx.fillRect(13, 15 + bob, 2, 6);
+      ctx.fillStyle = '#94a3b8'; // throwing dagger hilts
+      ctx.fillRect(11, 14 + bob, 2, 1);
+      ctx.fillRect(13, 16 + bob, 2, 1);
+
+      // Belt with poison flask pouch
+      ctx.fillStyle = '#451a03';
+      ctx.fillRect(9, 21 + bob, 13, 3);
+      ctx.fillStyle = '#10b981'; // glowing poison vial
+      ctx.fillRect(18, 21 + bob, 2, 3);
+
+      // --- HUNTER GREEN LEATHER HOOD & MASK ---
+      ctx.fillStyle = '#052e16';
+      ctx.fillRect(9, 3 + bob, 13, 11);
+      ctx.fillStyle = '#14532d';
+      ctx.fillRect(10, 4 + bob, 11, 9);
+      ctx.fillStyle = '#16a34a';
+      ctx.fillRect(11, 4 + bob, 8, 3);
+      // Peaked assassin hood tip
+      ctx.fillStyle = '#15803d';
+      ctx.fillRect(12, 1 + bob, 4, 3);
+      ctx.fillStyle = '#22c55e';
+      ctx.fillRect(13, 0 + bob, 2, 2);
+
+      // Dark face veil & Glowing Emerald Piercing Eyes
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(11, 8 + bob, 10, 4);
+      ctx.fillStyle = '#22c55e';
+      ctx.fillRect(12, 9 + bob, 3, 2);
+      ctx.fillRect(17, 9 + bob, 3, 2);
+      ctx.fillStyle = '#bbf7d0'; // eye highlights
+      ctx.fillRect(13, 9 + bob, 1, 1);
+      ctx.fillRect(18, 9 + bob, 1, 1);
+
+      // --- WEAPONS: TWIN POISONED DAMASCUS DAGGERS ---
+      // Right hand: Main curved dagger pointing forward
+      ctx.fillStyle = '#451a03';
+      ctx.fillRect(23, 18 + bob, 2, 3);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(22, 17 + bob, 4, 1);
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(24, 13 + bob, 3, 5);
+      ctx.fillStyle = '#10b981'; // venom coated edge
+      ctx.fillRect(25, 11 + bob, 2, 5);
+      ctx.fillStyle = '#a7f3d0';
+      ctx.fillRect(26, 10 + bob, 1, 2); // razor tip
+
+      // Left hand: Reverse-grip stiletto
+      ctx.fillStyle = '#451a03';
+      ctx.fillRect(6, 17 + bob, 2, 3);
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(5, 20 + bob, 2, 5);
+      ctx.fillStyle = '#a7f3d0';
+      ctx.fillRect(5, 25 + bob, 1, 1);
+
+    } else if (heroClass === 'mage') {
+      // --- ASTRAL ARCHMAGE ROBES ---
+      ctx.fillStyle = '#0f0a24';
+      ctx.fillRect(7, 12 + bob, 17, 14);
+      ctx.fillStyle = '#1e1b4b';
+      ctx.fillRect(8, 13 + bob, 15, 12);
+      ctx.fillStyle = '#312e81';
+      ctx.fillRect(10, 14 + bob, 11, 10);
+      // Golden Runic Hem & Starlight Embroidery
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(7, 24 + bob, 17, 2);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(11, 24 + bob, 2, 2);
+      ctx.fillRect(18, 24 + bob, 2, 2);
+      // Floating starlight motes on robe
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(11, 17 + bob, 1, 1);
+      ctx.fillRect(19, 16 + bob, 1, 1);
+      ctx.fillRect(14, 20 + bob, 1, 1);
+
+      // --- WIZARD HAT WITH CELESTIAL BUCKLE ---
+      // Wide curved brim
+      ctx.fillStyle = '#1e1b4b';
+      ctx.fillRect(6, 8 + bob, 19, 3);
+      ctx.fillStyle = '#312e81';
+      ctx.fillRect(8, 7 + bob, 15, 2);
+      // Golden hat band & Star Buckle
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(9, 7 + bob, 13, 2);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(14, 6 + bob, 3, 3);
+      // Tapering conical curved body
+      ctx.fillStyle = '#1e1b4b';
+      ctx.fillRect(9, 3 + bob, 13, 4);
+      ctx.fillStyle = '#312e81';
+      ctx.fillRect(10, 1 + bob, 9, 3);
+      // Floppy curved hat tip
+      ctx.fillStyle = '#3730a3';
+      ctx.fillRect(8, -1 + bob, 5, 3);
+      ctx.fillStyle = '#f59e0b'; // golden star bell on tip
+      ctx.fillRect(7, -1 + bob, 2, 2);
+
+      // Mysterious Dark Face & Glowing Cyan Star Eyes
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(10, 9 + bob, 11, 4);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(11, 10 + bob, 3, 2);
+      ctx.fillRect(17, 10 + bob, 3, 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(12, 10 + bob, 1, 1);
+      ctx.fillRect(18, 10 + bob, 1, 1);
 
       // Slippers
       ctx.fillStyle = '#312e81';
-      ctx.fillRect(8, 24 + bob, 4, 3);
-      ctx.fillRect(14, 24 + bob, 4, 3);
+      ctx.fillRect(10, 26 + bob, 4, 3);
+      ctx.fillRect(17, 26 + bob, 4, 3);
+
+      // --- WEAPONS: ANCIENT RUNIC STAFF (Right Hand) ---
+      // Twisted elderwood shaft
+      ctx.fillStyle = '#451a03';
+      ctx.fillRect(25, 4 + bob, 2, 24);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(26, 6 + bob, 1, 20);
+      // Rooted prongs at head
+      ctx.fillStyle = '#b45309';
+      ctx.fillRect(23, 2 + bob, 6, 2);
+      ctx.fillRect(23, 1 + bob, 2, 2);
+      ctx.fillRect(27, 1 + bob, 2, 2);
+      // Floating pulsating crystal orb
+      ctx.fillStyle = '#7c3aed';
+      ctx.fillRect(23, -2 + bob, 6, 5);
+      ctx.fillStyle = '#a855f7';
+      ctx.fillRect(24, -3 + bob, 4, 5);
+      ctx.fillStyle = '#c084fc';
+      ctx.fillRect(24, -2 + bob, 3, 3);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(25, -2 + bob, 1, 1);
+
+      // --- LEFTHAND: FLOATING ARCANE GRIMOIRE (SPELLBOOK) ---
+      ctx.fillStyle = '#581c87';
+      ctx.fillRect(4, 16 + bob, 4, 6);
+      ctx.fillStyle = '#7e22ce';
+      ctx.fillRect(5, 17 + bob, 3, 4);
+      ctx.fillStyle = '#f59e0b'; // gold corner clasp
+      ctx.fillRect(4, 16 + bob, 1, 1);
+      ctx.fillRect(4, 21 + bob, 1, 1);
+      ctx.fillStyle = '#38bdf8'; // glowing magic bookmark
+      ctx.fillRect(5, 21 + bob, 1, 3);
     }
 
     this.cache.set(key, canvas);
   }
 
-  // --- SLIME SPRITE ---
+  // --- 2. SLIME SPRITE (Glossy Translucent Emerald) ---
   private bakeSlime(type: 'SLIME' | 'MINI_SLIME', isFlash: boolean) {
     const isMini = type === 'MINI_SLIME';
-    const w = isMini ? 16 : 24;
-    const h = isMini ? 14 : 20;
+    const w = isMini ? 18 : 26;
+    const h = isMini ? 16 : 22;
     const [canvas, ctx] = this.createOffscreen(w, h);
     const key = `${type}_${isFlash ? 'flash' : 'normal'}`;
 
@@ -216,75 +405,45 @@ export class SpriteRenderer {
       return;
     }
 
-    // Emerald gelatinous body
-    ctx.fillStyle = '#15803d';
-    ctx.fillRect(3, 4, w - 6, h - 5);
-    ctx.fillStyle = '#22c55e';
-    ctx.fillRect(4, 3, w - 8, h - 5);
-    ctx.fillStyle = '#4ade80';
-    ctx.fillRect(5, 2, w - 10, 3); // top shine
-
-    // Eyes
+    // Outer dark translucent membrane
     ctx.fillStyle = '#052e16';
+    ctx.fillRect(2, 4, w - 4, h - 5);
+    ctx.fillRect(4, 2, w - 8, h - 3);
+
+    // Lush Emerald gelatinous body
+    ctx.fillStyle = '#15803d';
+    ctx.fillRect(3, 4, w - 6, h - 6);
+    ctx.fillStyle = '#22c55e';
+    ctx.fillRect(4, 3, w - 8, h - 6);
+    ctx.fillStyle = '#4ade80';
+    ctx.fillRect(5, 3, w - 10, 4); // glossy top dome shine
+    ctx.fillStyle = '#bbf7d0';
+    ctx.fillRect(6, 2, Math.max(3, w - 14), 2); // bright specular glint
+
+    // Internal suspended magic bubble
+    ctx.fillStyle = '#86efac';
+    ctx.fillRect(isMini ? 6 : 9, isMini ? 7 : 10, 2, 2);
+
+    // Expressive glowing eyes
+    const eyeY = isMini ? 6 : 8;
     const eyeSize = isMini ? 2 : 3;
-    ctx.fillRect(isMini ? 4 : 6, isMini ? 5 : 8, eyeSize, eyeSize);
-    ctx.fillRect(isMini ? 10 : 15, isMini ? 5 : 8, eyeSize, eyeSize);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(isMini ? 4 : 6, isMini ? 5 : 8, 1, 1);
-    ctx.fillRect(isMini ? 10 : 15, isMini ? 5 : 8, 1, 1);
+    const leftX = isMini ? 4 : 6;
+    const rightX = isMini ? 11 : 16;
+
+    ctx.fillStyle = '#022c22';
+    ctx.fillRect(leftX, eyeY, eyeSize, eyeSize);
+    ctx.fillRect(rightX, eyeY, eyeSize, eyeSize);
+    ctx.fillStyle = '#ffffff'; // anime glint
+    ctx.fillRect(leftX, eyeY, 1, 1);
+    ctx.fillRect(rightX, eyeY, 1, 1);
 
     this.cache.set(key, canvas);
   }
 
-  // --- SKELETON ARCHER ---
+  // --- 3. SKELETON ARCHER (Detailed Bone Archer with Quiver) ---
   private bakeSkeleton(frame: number, isFlash: boolean) {
-    const [canvas, ctx] = this.createOffscreen(22, 28);
-    const key = `skeleton_${frame}_${isFlash ? 'flash' : 'normal'}`;
-
-    if (isFlash) {
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(4, 4, 14, 20);
-      this.cache.set(key, canvas);
-      return;
-    }
-
-    const bob = frame === 1 ? 1 : 0;
-    // Skull
-    ctx.fillStyle = '#cbd5e1';
-    ctx.fillRect(6, 3 + bob, 10, 8);
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillRect(7, 4 + bob, 8, 6);
-    // Dark eye sockets
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(8, 6 + bob, 2, 3);
-    ctx.fillRect(12, 6 + bob, 2, 3);
-
-    // Ribcage & Spine
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillRect(8, 11 + bob, 6, 7);
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillRect(7, 12 + bob, 8, 1);
-    ctx.fillRect(7, 14 + bob, 8, 1);
-    ctx.fillRect(8, 16 + bob, 6, 1);
-
-    // Legs
-    ctx.fillStyle = '#cbd5e1';
-    ctx.fillRect(8, 18 + bob, 2, 7);
-    ctx.fillRect(12, 18 + bob, 2, 7);
-
-    // Bone Bow in hand
-    ctx.fillStyle = '#78350f';
-    ctx.fillRect(2, 8 + bob, 2, 12);
-    ctx.fillRect(3, 7 + bob, 2, 2);
-    ctx.fillRect(3, 19 + bob, 2, 2);
-
-    this.cache.set(key, canvas);
-  }
-
-  // --- GOBLIN BERSERKER ---
-  private bakeBerserker(frame: number, isFlash: boolean) {
     const [canvas, ctx] = this.createOffscreen(26, 30);
-    const key = `berserker_${frame}_${isFlash ? 'flash' : 'normal'}`;
+    const key = `skeleton_${frame}_${isFlash ? 'flash' : 'normal'}`;
 
     if (isFlash) {
       ctx.fillStyle = '#ffffff';
@@ -294,109 +453,230 @@ export class SpriteRenderer {
     }
 
     const bob = frame === 1 ? 1 : 0;
-    // Red horned war helmet
-    ctx.fillStyle = '#991b1b';
-    ctx.fillRect(7, 4 + bob, 12, 9);
-    ctx.fillStyle = '#ef4444';
-    ctx.fillRect(8, 5 + bob, 10, 7);
-    // Horns
-    ctx.fillStyle = '#fef08a';
-    ctx.fillRect(5, 2 + bob, 3, 4);
-    ctx.fillRect(18, 2 + bob, 3, 4);
 
-    // Fierce glowing eyes
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(8, 8 + bob, 10, 3);
-    ctx.fillStyle = '#fbbf24';
-    ctx.fillRect(10, 9 + bob, 2, 1);
-    ctx.fillRect(14, 9 + bob, 2, 1);
-
-    // Muscular Brute Body & Spiked Armbands
-    ctx.fillStyle = '#b91c1c';
-    ctx.fillRect(6, 13 + bob, 14, 8);
-    ctx.fillStyle = '#78350f'; // leather belt
-    ctx.fillRect(6, 18 + bob, 14, 3);
-
-    // Heavy Spiked Axe in hand
-    ctx.fillStyle = '#475569';
-    ctx.fillRect(2, 6 + bob, 5, 8);
+    // Bone Quiver on Back
     ctx.fillStyle = '#78350f';
-    ctx.fillRect(4, 11 + bob, 2, 14);
+    ctx.fillRect(16, 8 + bob, 4, 10);
+    ctx.fillStyle = '#dc2626'; // arrow fletching feathers
+    ctx.fillRect(16, 5 + bob, 2, 3);
+    ctx.fillRect(18, 6 + bob, 2, 3);
 
-    // Boots
-    ctx.fillStyle = '#451a03';
-    ctx.fillRect(7, 21 + bob, 4, 6);
-    ctx.fillRect(15, 21 + bob, 4, 6);
+    // Skull
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(7, 3 + bob, 11, 9);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillRect(8, 4 + bob, 9, 7);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(9, 4 + bob, 6, 2); // forehead highlight
+    // Glowing Crimson Eye Sockets
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(9, 7 + bob, 3, 3);
+    ctx.fillRect(14, 7 + bob, 3, 3);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(10, 8 + bob, 1, 1);
+    ctx.fillRect(15, 8 + bob, 1, 1);
+    // Teeth / Jaw
+    ctx.fillStyle = '#475569';
+    ctx.fillRect(10, 11 + bob, 6, 2);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(10, 11 + bob, 1, 1);
+    ctx.fillRect(12, 11 + bob, 1, 1);
+    ctx.fillRect(14, 11 + bob, 1, 1);
+
+    // Ribcage & Spine
+    ctx.fillStyle = '#64748b';
+    ctx.fillRect(10, 12 + bob, 6, 8);
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillRect(9, 13 + bob, 8, 1);
+    ctx.fillRect(9, 15 + bob, 8, 1);
+    ctx.fillRect(10, 17 + bob, 6, 1);
+    ctx.fillStyle = '#475569';
+    ctx.fillRect(12, 12 + bob, 2, 8); // spine column
+
+    // Pelvis & Legs
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(9, 19 + bob, 8, 2);
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillRect(9, 21 + bob, 2, 8 + (frame === 1 ? -1 : 1));
+    ctx.fillRect(15, 21 + bob, 2, 8 + (frame === 1 ? 1 : -1));
+
+    // Carved Bone Bow in Hand
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(3, 7 + bob, 2, 15);
+    ctx.fillRect(4, 6 + bob, 2, 2);
+    ctx.fillRect(4, 21 + bob, 2, 2);
+    ctx.fillStyle = '#e2e8f0'; // bow string
+    ctx.fillRect(5, 7 + bob, 1, 15);
 
     this.cache.set(key, canvas);
   }
 
-  // --- DARK MAGE ---
+  // --- 4. GOBLIN BERSERKER (Dual-Bladed Rage Colossus) ---
+  private bakeBerserker(frame: number, isFlash: boolean) {
+    const [canvas, ctx] = this.createOffscreen(28, 32);
+    const key = `berserker_${frame}_${isFlash ? 'flash' : 'normal'}`;
+
+    if (isFlash) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(4, 4, 20, 24);
+      this.cache.set(key, canvas);
+      return;
+    }
+
+    const bob = frame === 1 ? 1 : 0;
+
+    // Horned War Helmet (Dark Crimson & Spiked Iron)
+    ctx.fillStyle = '#7f1d1d';
+    ctx.fillRect(7, 3 + bob, 14, 10);
+    ctx.fillStyle = '#b91c1c';
+    ctx.fillRect(8, 4 + bob, 12, 8);
+    // Wicked Horns
+    ctx.fillStyle = '#ca8a04';
+    ctx.fillRect(4, 1 + bob, 4, 5);
+    ctx.fillRect(20, 1 + bob, 4, 5);
+    ctx.fillStyle = '#fef08a';
+    ctx.fillRect(3, 0 + bob, 2, 3);
+    ctx.fillRect(23, 0 + bob, 2, 3);
+
+    // Flaming Orange Rage Eyes
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(9, 8 + bob, 10, 3);
+    ctx.fillStyle = '#f97316';
+    ctx.fillRect(10, 8 + bob, 3, 2);
+    ctx.fillRect(15, 8 + bob, 3, 2);
+    ctx.fillStyle = '#fef08a';
+    ctx.fillRect(11, 8 + bob, 1, 1);
+    ctx.fillRect(16, 8 + bob, 1, 1);
+
+    // Muscular Brute Torso & Spiked Iron Armbands
+    ctx.fillStyle = '#991b1b';
+    ctx.fillRect(6, 13 + bob, 16, 9);
+    ctx.fillStyle = '#dc2626';
+    ctx.fillRect(7, 14 + bob, 14, 7);
+    ctx.fillStyle = '#334155'; // iron armbands
+    ctx.fillRect(4, 14 + bob, 3, 4);
+    ctx.fillRect(21, 14 + bob, 3, 4);
+
+    // Heavy Studded Belt
+    ctx.fillStyle = '#451a03';
+    ctx.fillRect(6, 20 + bob, 16, 3);
+    ctx.fillStyle = '#ca8a04';
+    ctx.fillRect(12, 20 + bob, 4, 3);
+
+    // Massive Serrated Battle Axe in Hand
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(1, 5 + bob, 6, 10);
+    ctx.fillStyle = '#475569';
+    ctx.fillRect(2, 6 + bob, 4, 8);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(1, 7 + bob, 1, 6); // serrated blade notches
+    // Heavy axe shaft
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(4, 11 + bob, 2, 16);
+
+    // Heavy Boots
+    ctx.fillStyle = '#292524';
+    ctx.fillRect(8, 23 + bob, 5, 7 + (frame === 1 ? -1 : 1));
+    ctx.fillRect(16, 23 + bob, 5, 7 + (frame === 1 ? 1 : -1));
+
+    this.cache.set(key, canvas);
+  }
+
+  // --- 5. DARK MAGE (Sinister Floating Warlock) ---
   private bakeMage(frame: number, isFlash: boolean) {
-    const [canvas, ctx] = this.createOffscreen(24, 30);
+    const [canvas, ctx] = this.createOffscreen(26, 32);
     const key = `mage_${frame}_${isFlash ? 'flash' : 'normal'}`;
 
     if (isFlash) {
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(4, 4, 16, 22);
+      ctx.fillRect(4, 4, 18, 24);
       this.cache.set(key, canvas);
       return;
     }
 
-    // Shadow Purple Robe
-    ctx.fillStyle = '#3b0764';
-    ctx.fillRect(5, 6, 14, 19);
-    ctx.fillStyle = '#581c87';
-    ctx.fillRect(6, 8, 12, 16);
+    const bob = frame === 1 ? 1 : 0;
 
-    // Hood & glowing amethyst eyes
+    // Flowing Void Robe (Royal Violet & Cursed Shadows)
     ctx.fillStyle = '#2e1065';
-    ctx.fillRect(6, 3, 12, 8);
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(8, 6, 8, 4);
-    ctx.fillStyle = '#c084fc';
-    ctx.fillRect(9, 7, 2, 2);
-    ctx.fillRect(13, 7, 2, 2);
+    ctx.fillRect(5, 7 + bob, 16, 21);
+    ctx.fillStyle = '#3b0764';
+    ctx.fillRect(6, 8 + bob, 14, 19);
+    ctx.fillStyle = '#581c87';
+    ctx.fillRect(8, 10 + bob, 10, 16);
+    // Tattered hem notches
+    ctx.fillStyle = '#090d16';
+    ctx.fillRect(6, 27 + bob, 2, 2);
+    ctx.fillRect(10, 26 + bob, 2, 3);
+    ctx.fillRect(15, 27 + bob, 2, 2);
+    ctx.fillRect(19, 26 + bob, 2, 3);
 
-    // Orb staff
-    ctx.fillStyle = '#78350f';
-    ctx.fillRect(2, 5, 2, 20);
+    // Horned Warlock Cowl
+    ctx.fillStyle = '#1e0847';
+    ctx.fillRect(7, 3 + bob, 12, 9);
+    ctx.fillStyle = '#3b0764';
+    ctx.fillRect(8, 4 + bob, 10, 8);
+    // Horned peaks
+    ctx.fillStyle = '#581c87';
+    ctx.fillRect(6, 1 + bob, 3, 4);
+    ctx.fillRect(17, 1 + bob, 3, 4);
+
+    // Shadow Face & Sinister Glowing Amethyst Eyes
+    ctx.fillStyle = '#090514';
+    ctx.fillRect(9, 7 + bob, 8, 4);
     ctx.fillStyle = '#c084fc';
-    ctx.fillRect(0, 3, 6, 6);
+    ctx.fillRect(10, 8 + bob, 2, 2);
+    ctx.fillRect(14, 8 + bob, 2, 2);
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(2, 4, 2, 2);
+    ctx.fillRect(10, 8 + bob, 1, 1);
+    ctx.fillRect(14, 8 + bob, 1, 1);
+
+    // Cursed Shadow Staff (Topped with Glowing Void Flame)
+    ctx.fillStyle = '#1e1b4b';
+    ctx.fillRect(2, 6 + bob, 2, 22);
+    // Skull staff head
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(1, 4 + bob, 4, 3);
+    // Glowing purple flame
+    ctx.fillStyle = '#7c3aed';
+    ctx.fillRect(0, 0 + bob + (frame === 1 ? -1 : 0), 6, 5);
+    ctx.fillStyle = '#c084fc';
+    ctx.fillRect(1, 1 + bob + (frame === 1 ? -1 : 0), 4, 3);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(2, 1 + bob + (frame === 1 ? -1 : 0), 2, 2);
 
     this.cache.set(key, canvas);
   }
 
-  // --- BOSS GOLEM (NORMAL & ENRAGED) ---
+  // --- 6. BOSS GOLEM (Massive Stone Colossus) ---
   private bakeBossGolem(isEnraged: boolean, isFlash: boolean) {
-    const [canvas, ctx] = this.createOffscreen(56, 60);
+    const [canvas, ctx] = this.createOffscreen(56, 58);
     const key = `boss_${isEnraged ? 'enraged' : 'normal'}_${isFlash ? 'flash' : 'normal'}`;
 
     if (isFlash) {
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(6, 6, 44, 48);
+      ctx.fillRect(4, 4, 48, 50);
       this.cache.set(key, canvas);
       return;
     }
 
-    // Heavy Stone Head
-    ctx.fillStyle = isEnraged ? '#450a0a' : '#1e293b';
-    ctx.fillRect(18, 6, 20, 14);
-    ctx.fillStyle = isEnraged ? '#7f1d1d' : '#475569';
-    ctx.fillRect(20, 8, 16, 11);
+    // Colossal Horned Stone Crown
+    ctx.fillStyle = isEnraged ? '#7f1d1d' : '#1e293b';
+    ctx.fillRect(16, 4, 24, 15);
+    ctx.fillStyle = isEnraged ? '#b91c1c' : '#334155';
+    ctx.fillRect(18, 6, 20, 11);
+    ctx.fillStyle = isEnraged ? '#ea580c' : '#475569';
+    ctx.fillRect(13, 2, 6, 8);
+    ctx.fillRect(37, 2, 6, 8);
 
-    // Glowing ancient rune eyes (flaring red/orange when enraged, cyan when normal)
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(22, 12, 4, 3);
-    ctx.fillRect(30, 12, 4, 3);
-    ctx.fillStyle = isEnraged ? '#ef4444' : '#06b6d4';
-    ctx.fillRect(23, 13, 3, 2);
-    ctx.fillRect(31, 13, 3, 2);
+    // Glowing Golem Eyes
+    ctx.fillStyle = '#090d16';
+    ctx.fillRect(20, 11, 16, 4);
+    ctx.fillStyle = isEnraged ? '#f97316' : '#38bdf8';
+    ctx.fillRect(22, 12, 4, 2);
+    ctx.fillRect(30, 12, 4, 2);
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(24, 13, 1, 1);
-    ctx.fillRect(32, 13, 1, 1);
+    ctx.fillRect(23, 12, 2, 2);
+    ctx.fillRect(31, 12, 2, 2);
 
     // Massive Stone Shoulders & Chest
     ctx.fillStyle = isEnraged ? '#3b0d0c' : '#0f172a';
@@ -447,7 +727,6 @@ export class SpriteRenderer {
   // --- BOULDER PROJECTILE ---
   private bakeBoulder() {
     const [canvas, ctx] = this.createOffscreen(20, 20);
-    // Jagged round rock
     ctx.fillStyle = '#1e293b';
     ctx.beginPath();
     ctx.arc(10, 10, 9, 0, Math.PI * 2);
@@ -458,7 +737,6 @@ export class SpriteRenderer {
     ctx.arc(9, 9, 7, 0, Math.PI * 2);
     ctx.fill();
 
-    // Cracks & magma glow
     ctx.fillStyle = '#ea580c';
     ctx.fillRect(6, 7, 6, 2);
     ctx.fillRect(10, 9, 4, 3);
@@ -823,6 +1101,24 @@ export class SpriteRenderer {
   }
 
   // --- DRAW METHODS ---
+
+  // Smooth Ambient Occlusion Drop Shadow for all entities
+  public drawDropShadow(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    radiusX: number,
+    radiusY: number,
+    alpha: number = 0.38
+  ) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(x, y, radiusX, radiusY, 0, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(3, 7, 18, ${alpha})`;
+    ctx.fill();
+    ctx.restore();
+  }
+
   public drawFloor(
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -876,14 +1172,14 @@ export class SpriteRenderer {
 
     if (isAttacking) {
       const peak = Math.sin(attackProgress * Math.PI);
-      lungeX = Math.cos(attackAngle) * peak * 5.0;
-      lungeY = Math.sin(attackAngle) * peak * 4.0;
-      attackLean = (facing === 'right' ? 1 : -1) * peak * 0.16;
-      attackScaleX = 1.0 + peak * 0.15;
-      attackScaleY = 1.0 - peak * 0.08;
+      lungeX = Math.cos(attackAngle) * peak * 6.0;
+      lungeY = Math.sin(attackAngle) * peak * 4.5;
+      attackLean = (facing === 'right' ? 1 : -1) * peak * 0.18;
+      attackScaleX = 1.0 + peak * 0.16;
+      attackScaleY = 1.0 - peak * 0.09;
     }
 
-    // 2. Idle Breathing Animation (Rhythmic chest & cape expansion)
+    // 2. Idle Breathing Animation (Rhythmic chest expansion)
     let idleBobY = 0;
     let idleScaleY = 1;
     if (isIdle && !isAttacking && !isDashing) {
@@ -912,11 +1208,12 @@ export class SpriteRenderer {
 
     if (isDashing) {
       ctx.globalAlpha = 0.5;
-      ctx.drawImage(img, -18, -15, 28, 32);
+      ctx.drawImage(img, -20, -19, 36, 38);
       ctx.globalAlpha = 1.0;
     }
 
-    ctx.drawImage(img, -13, -15, 26, 30);
+    // Center 32x34 player sprite cleanly over physics collision center
+    ctx.drawImage(img, -16, -17, 32, 34);
     ctx.restore();
   }
 
@@ -939,7 +1236,7 @@ export class SpriteRenderer {
       ctx.scale(-1, 1);
     }
     ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-    ctx.drawImage(img, -13, -15, 26, 30);
+    ctx.drawImage(img, -16, -17, 32, 34);
     ctx.restore();
   }
 
@@ -957,54 +1254,101 @@ export class SpriteRenderer {
     ctx.rotate(angle);
 
     if (heroClass === 'mage') {
-      // Magic blast arc
-      const radius = 38;
+      // Cosmic Arcane Nova Burst (Expanding Rune Arc & Starlight Specks)
+      const radius = 42;
       ctx.beginPath();
-      ctx.arc(0, 0, radius, -Math.PI * 0.35, Math.PI * 0.35);
-      ctx.strokeStyle = hasFire ? '#f97316' : '#38bdf8';
-      ctx.lineWidth = 8 * (1 - progress);
+      ctx.arc(0, 0, radius, -Math.PI * 0.42, Math.PI * 0.42);
+      ctx.strokeStyle = hasFire ? '#ea580c' : '#7c3aed';
+      ctx.lineWidth = 10 * (1 - progress);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(0, 0, radius - 3, -Math.PI * 0.3, Math.PI * 0.3);
-      ctx.strokeStyle = '#fef08a';
-      ctx.lineWidth = 4 * (1 - progress);
+      ctx.arc(0, 0, radius - 2, -Math.PI * 0.38, Math.PI * 0.38);
+      ctx.strokeStyle = hasFire ? '#f97316' : '#38bdf8';
+      ctx.lineWidth = 5 * (1 - progress);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius - 4, -Math.PI * 0.3, Math.PI * 0.3);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.5 * (1 - progress);
       ctx.stroke();
       ctx.restore();
       return;
     }
 
-    const radius = heroClass === 'rogue' ? 28 : 34;
-    const sweep = heroClass === 'rogue' ? Math.PI * 0.9 : Math.PI * 0.75;
+    if (heroClass === 'rogue') {
+      // Twin Venom Emerald Cross-Slices
+      const radius = 32;
+      const sweep = Math.PI * 0.95;
+      const startAngle = -sweep / 2 + progress * sweep * 0.25;
+      const endAngle = startAngle + sweep * (1 - progress * 0.25);
+
+      // Primary venom blade trail
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, startAngle, endAngle);
+      ctx.strokeStyle = hasFire ? '#f97316' : '#10b981';
+      ctx.lineWidth = 6 * (1 - progress);
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Secondary reverse cross-cut slice
+      ctx.beginPath();
+      ctx.arc(0, 0, radius - 6, startAngle + 0.15, endAngle - 0.15);
+      ctx.strokeStyle = hasFire ? '#fef08a' : '#6ee7b7';
+      ctx.lineWidth = 3.5 * (1 - progress);
+      ctx.stroke();
+
+      // Blade Core Gleam
+      const bladeLen = 22;
+      ctx.rotate(startAngle + sweep * 0.88);
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(6, -2, bladeLen, 3);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(8, -1, bladeLen - 3, 2);
+      ctx.restore();
+      return;
+    }
+
+    // Knight's Heavy Golden Steel Crescent Cleave
+    const radius = 38;
+    const sweep = Math.PI * 0.82;
     const startAngle = -sweep / 2 + progress * sweep * 0.3;
     const endAngle = startAngle + sweep * (1 - progress * 0.3);
 
-    // Trail arc
+    // Outer Heavy Slicing Edge
     ctx.beginPath();
     ctx.arc(0, 0, radius, startAngle, endAngle);
-    ctx.strokeStyle = hasFire ? '#f97316' : heroClass === 'rogue' ? '#4ade80' : '#e0f2fe';
-    ctx.lineWidth = (heroClass === 'rogue' ? 4 : 6) * (1 - progress);
+    ctx.strokeStyle = hasFire ? '#ea580c' : '#38bdf8';
+    ctx.lineWidth = 8 * (1 - progress);
     ctx.lineCap = 'round';
     ctx.stroke();
 
-    // Hot inner core arc
+    // Hot Molten / Golden Core
     ctx.beginPath();
-    ctx.arc(0, 0, radius - 2, startAngle + 0.1, endAngle - 0.1);
-    ctx.strokeStyle = hasFire ? '#fef08a' : '#ffffff';
-    ctx.lineWidth = 3 * (1 - progress);
+    ctx.arc(0, 0, radius - 2, startAngle + 0.08, endAngle - 0.08);
+    ctx.strokeStyle = hasFire ? '#f97316' : '#fbbf24';
+    ctx.lineWidth = 5 * (1 - progress);
     ctx.stroke();
 
-    // Weapon Blade
-    const bladeLen = heroClass === 'rogue' ? 18 : 28;
-    ctx.rotate(startAngle + sweep * 0.85);
+    // White-Hot Razor Center
+    ctx.beginPath();
+    ctx.arc(0, 0, radius - 4, startAngle + 0.15, endAngle - 0.15);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.5 * (1 - progress);
+    ctx.stroke();
+
+    // Sword Blade Model
+    const bladeLen = 32;
+    ctx.rotate(startAngle + sweep * 0.86);
     ctx.fillStyle = '#64748b';
-    ctx.fillRect(6, -2, bladeLen, 3);
+    ctx.fillRect(6, -2, bladeLen, 4);
     ctx.fillStyle = '#f8fafc';
     ctx.fillRect(8, -1, bladeLen - 2, 2);
-    ctx.fillStyle = heroClass === 'rogue' ? '#15803d' : '#f59e0b';
-    ctx.fillRect(4, -3, 3, 6);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillRect(4, -4, 4, 8);
     ctx.fillStyle = '#78350f';
-    ctx.fillRect(0, -2, 4, 3);
+    ctx.fillRect(0, -2, 5, 4);
 
     ctx.restore();
   }
@@ -1032,11 +1376,14 @@ export class SpriteRenderer {
     if (enemy.type === 'SLIME' || enemy.type === 'MINI_SLIME') {
       key = `${enemy.type}_${isFlash ? 'flash' : 'normal'}`;
     } else if (enemy.type === 'SKELETON') {
-      key = `skeleton_${enemy.animFrame}_${isFlash ? 'flash' : 'normal'}`;
+      const f = (enemy.animFrame || 0) % 2;
+      key = `skeleton_${f}_${isFlash ? 'flash' : 'normal'}`;
     } else if (enemy.type === 'BERSERKER') {
-      key = `berserker_${enemy.animFrame}_${isFlash ? 'flash' : 'normal'}`;
+      const f = (enemy.animFrame || 0) % 2;
+      key = `berserker_${f}_${isFlash ? 'flash' : 'normal'}`;
     } else if (enemy.type === 'MAGE') {
-      key = `mage_0_${isFlash ? 'flash' : 'normal'}`;
+      const f = (enemy.animFrame || 0) % 2;
+      key = `mage_${f}_${isFlash ? 'flash' : 'normal'}`;
     } else if (enemy.type === 'BOSS_GOLEM') {
       const isEnraged = (enemy.hp && enemy.maxHp) ? enemy.hp <= enemy.maxHp * 0.5 : false;
       key = `boss_${isEnraged ? 'enraged' : 'normal'}_${isFlash ? 'flash' : 'normal'}`;
@@ -1046,7 +1393,14 @@ export class SpriteRenderer {
     if (!img) return;
 
     ctx.save();
-    ctx.translate(enemy.x, enemy.y);
+
+    // Dark Mage Floating Wave
+    let hoverY = 0;
+    if (enemy.type === 'MAGE') {
+      hoverY = Math.sin(performance.now() * 0.005 + enemy.x * 0.1) * 3.5;
+    }
+
+    ctx.translate(enemy.x, enemy.y + hoverY);
     if (enemy.facing === 'left') {
       ctx.scale(-1, 1);
     }
@@ -1069,32 +1423,18 @@ export class SpriteRenderer {
     ctx.restore();
   }
 
-  public drawPickup(ctx: CanvasRenderingContext2D, type: string, x: number, y: number, bob: number) {
-    const img = this.cache.get(type);
-    if (!img) return;
-    ctx.save();
-    ctx.translate(x, y + Math.sin(bob) * 3);
-    ctx.drawImage(img, -img.width / 2, -img.height / 2);
-    ctx.restore();
-  }
-
-  public drawProp(
-    ctx: CanvasRenderingContext2D,
-    type: 'pot' | 'chest' | 'crate' | 'urn' | 'crystal' | 'anvil' | 'skull_pile',
-    x: number,
-    y: number,
-    opened?: boolean
-  ) {
-    let key: string = type;
-    if (type === 'chest') {
-      key = `chest_${opened ? 'open' : 'closed'}`;
-    }
+  public drawProp(ctx: CanvasRenderingContext2D, type: 'pot' | 'chest' | 'crate' | 'urn' | 'crystal' | 'anvil' | 'skull_pile', x: number, y: number, isOpen: boolean = false) {
+    const key = type === 'chest' ? `chest_${isOpen ? 'open' : 'closed'}` : type;
     const img = this.cache.get(key);
     if (!img) return;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.drawImage(img, -img.width / 2, -img.height / 2);
-    ctx.restore();
+    ctx.drawImage(img, x - img.width / 2, y - img.height / 2);
+  }
+
+  public drawPickup(ctx: CanvasRenderingContext2D, type: 'heart' | 'coin' | 'gem', x: number, y: number, bobTimer: number) {
+    const img = this.cache.get(type);
+    if (!img) return;
+    const bob = Math.sin(bobTimer * 4) * 3;
+    ctx.drawImage(img, x - img.width / 2, y - img.height / 2 + bob);
   }
 }
 
