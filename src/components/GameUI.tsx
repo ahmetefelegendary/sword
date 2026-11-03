@@ -24,17 +24,12 @@ import {
   X,
   Trophy,
   Home,
-  Download,
-  Smartphone,
   ShieldCheck,
   Trash2,
-  Package,
-  CheckCircle2,
-  ExternalLink
+  Smartphone
 } from 'lucide-react';
 import { usePWAInstall } from '../utils/pwaPush';
 import { getRuntimePlatform } from '../utils/platform';
-import { APP_METADATA, MOBILE_DOWNLOAD_PLATFORMS, DownloadPlatformItem } from '../config/storeConfig';
 
 interface GameUIProps {
   gameState: GameState;
@@ -70,9 +65,6 @@ export const GameUI: React.FC<GameUIProps> = ({
   const [showControlsModal, setShowControlsModal] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
   const [showIOSInstallModal, setShowIOSInstallModal] = useState(false);
-  const [showPlatformsModal, setShowPlatformsModal] = useState(false);
-  const [platformsTab, setPlatformsTab] = useState<'stores' | 'build'>('stores');
-  const [selectedPlatformNotice, setSelectedPlatformNotice] = useState<string | null>(null);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
@@ -461,22 +453,6 @@ export const GameUI: React.FC<GameUIProps> = ({
               </button>
             </div>
 
-            {/* Web-Only: Mobile Store & Downloadable Platforms Hub (Automatically hidden inside Native iOS/Android Store builds) */}
-            {!runtimeInfo.isNativeStoreBuild && (
-              <div className="w-full mb-2">
-                <button
-                  onClick={() => {
-                    setSelectedPlatformNotice(null);
-                    setShowPlatformsModal(true);
-                  }}
-                  className="arcade-btn w-full py-2 bg-[#131d2e] border border-cyan-500/50 hover:border-cyan-400 text-[7px] sm:text-[8px] font-pixel text-cyan-300 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                >
-                  <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
-                  {tr ? 'MOBİL PLATFORMLAR & İNDİR' : 'MOBILE PLATFORMS & DOWNLOAD'}
-                </button>
-              </div>
-            )}
-
             {/* Settings & Viewport advice */}
             <div className="flex items-center justify-between w-full text-[8px] font-pixel text-slate-400 border-t border-slate-800 pt-2.5">
               <button onClick={onToggleLang} className="hover:text-white cursor-pointer">
@@ -570,10 +546,8 @@ export const GameUI: React.FC<GameUIProps> = ({
                 <span className="text-white">{hud.wave}</span>
               </div>
               <div className="flex justify-between text-slate-400">
-                <span>{tr ? 'SÜRÜM / PLATFORM:' : 'VERSION / PLATFORM:'}</span>
-                <span className="text-cyan-400 uppercase">
-                  v{APP_METADATA.version} ({runtimeInfo.isNativeStoreBuild ? 'NATIVE' : 'WEB'})
-                </span>
+                <span>{tr ? 'SÜRÜM:' : 'VERSION:'}</span>
+                <span className="text-cyan-400 uppercase">v1.0.0 Arcade</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>{tr ? 'DURUM:' : 'STATUS:'}</span>
@@ -661,17 +635,8 @@ export const GameUI: React.FC<GameUIProps> = ({
                   ? 'Uygulama hiçbir bildirim (push) izni istemez ve tamamen çevrimdışı (offline) çalışabilir.'
                   : 'The game requests zero push notification permissions and works 100% offline.'}
               </p>
-              <div className="pt-1 border-t border-slate-800 flex items-center justify-between text-[9px] text-slate-400">
-                <span>Bundle ID: {APP_METADATA.appId}</span>
-                <a
-                  href={APP_METADATA.privacyPolicyPath}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-amber-400 hover:underline flex items-center gap-1"
-                >
-                  <span>/privacy-policy.html</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
+              <div className="pt-1 border-t border-slate-800 text-[9px] text-slate-400 text-center">
+                <span>Dungeon Slayer: Pixel Knight &copy; 2026</span>
               </div>
             </div>
 
@@ -680,174 +645,6 @@ export const GameUI: React.FC<GameUIProps> = ({
               className="arcade-btn w-full py-2 bg-amber-500 text-slate-950 font-pixel text-[8px] cursor-pointer shrink-0"
             >
               {tr ? 'ANLADIM' : 'CLOSE'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ================= MOBILE PLATFORMS & STORE DISTRIBUTION HUB (WEB ONLY) ================= */}
-      {showPlatformsModal && !runtimeInfo.isNativeStoreBuild && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xs pointer-events-auto">
-          <div className="pixel-panel p-4 sm:p-5 max-w-lg w-full max-h-[92dvh] flex flex-col relative text-left">
-            <button
-              onClick={() => setShowPlatformsModal(false)}
-              className="absolute top-3 right-3 p-1 text-slate-400 hover:text-white cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <h3 className="font-pixel text-[10px] sm:text-xs text-amber-400 mb-1 flex items-center gap-1.5 shrink-0">
-              <Smartphone className="w-4 h-4 text-cyan-400" />
-              {tr ? 'MOBİL MAĞAZALAR & İNDİRİLEBİLİR PLATFORMLAR' : 'MOBILE STORES & DOWNLOAD PLATFORMS'}
-            </h3>
-            <p className="text-[10px] text-slate-400 mb-3 shrink-0">
-              {tr
-                ? 'Web sürümü ile Native mağaza sürümleri (iOS App Store, Google Play ve APK platformları) birbirinden bağımsız çalışır.'
-                : 'Web version and Native mobile store builds (iOS App Store, Google Play & APK stores) are separated.'}
-            </p>
-
-            {/* Tabs: Downloadable Platforms vs Store Package Readiness */}
-            <div className="grid grid-cols-2 gap-1.5 mb-3 shrink-0">
-              <button
-                onClick={() => setPlatformsTab('stores')}
-                className={`arcade-btn py-1.5 font-pixel text-[7px] flex items-center justify-center gap-1 cursor-pointer ${
-                  platformsTab === 'stores'
-                    ? 'bg-amber-500 text-slate-950'
-                    : 'bg-slate-900 text-slate-400'
-                }`}
-              >
-                <Download className="w-3 h-3" />
-                {tr ? 'İNDİRME PLATFORMLARI (6)' : 'DOWNLOAD PLATFORMS (6)'}
-              </button>
-              <button
-                onClick={() => setPlatformsTab('build')}
-                className={`arcade-btn py-1.5 font-pixel text-[7px] flex items-center justify-center gap-1 cursor-pointer ${
-                  platformsTab === 'build'
-                    ? 'bg-cyan-400 text-slate-950'
-                    : 'bg-slate-900 text-slate-400'
-                }`}
-              >
-                <Package className="w-3 h-3" />
-                {tr ? 'APP STORE & PLAY PAKETİ' : 'STORE BUILD CONFIG'}
-              </button>
-            </div>
-
-            {platformsTab === 'stores' ? (
-              <div className="flex flex-col gap-2 overflow-y-auto pr-0.5 mb-3">
-                {/* 6 Mobile Store & Downloadable Platform Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {MOBILE_DOWNLOAD_PLATFORMS.map((plat: DownloadPlatformItem) => (
-                    <div
-                      key={plat.id}
-                      className={`p-2.5 border flex flex-col justify-between gap-2 ${plat.accentColor}`}
-                    >
-                      <div>
-                        <div className="flex items-center justify-between gap-1 mb-0.5">
-                          <span className="font-pixel text-[8px] text-white">
-                            {tr ? plat.nameTr : plat.name}
-                          </span>
-                          <span className="text-[7px] font-pixel px-1 py-0.5 bg-black/60 text-slate-300">
-                            {plat.version}
-                          </span>
-                        </div>
-                        <p className="text-[10px] text-slate-300 leading-snug">
-                          {tr ? plat.subtitleTr : plat.subtitle}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-1 border-t border-white/10">
-                        <span className="text-[9px] text-slate-400 font-mono">{plat.size}</span>
-                        <button
-                          onClick={() => {
-                            setSelectedPlatformNotice(
-                              tr
-                                ? `${plat.nameTr} (${plat.version}) paketi mağaza yayınına hazır! Mağaza linklerinizi src/config/storeConfig.ts dosyasından tanımlayabilirsiniz.`
-                                : `${plat.name} (${plat.version}) is ready! Set your live store URL in src/config/storeConfig.ts.`
-                            );
-                          }}
-                          className="arcade-btn px-2 py-1 bg-black/80 hover:bg-black text-amber-300 font-pixel text-[7px] flex items-center gap-1 cursor-pointer"
-                        >
-                          <Download className="w-2.5 h-2.5" />
-                          {tr ? plat.badgeTextTr : plat.badgeText}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Instant Phone Install via Browser (Web App / Home Screen) */}
-                {!isInstalled && (
-                  <div className="p-2.5 bg-slate-900/90 border border-slate-700 flex items-center justify-between gap-2">
-                    <div>
-                      <span className="font-pixel text-[8px] text-cyan-300 block mb-0.5">
-                        {tr ? 'TARAYICIDAN ANINDA TELEFONA KUR' : 'INSTANT PHONE INSTALL (WEB APP)'}
-                      </span>
-                      <p className="text-[10px] text-slate-400">
-                        {tr
-                          ? 'Mağaza beklemeden telefonunuzun ana ekranına tam ekran oyun olarak ekleyin.'
-                          : 'Add directly to your phone home screen in full-screen mode.'}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        if (isInstallable) {
-                          install();
-                        } else {
-                          setShowPlatformsModal(false);
-                          setShowIOSInstallModal(true);
-                        }
-                      }}
-                      className="arcade-btn px-2.5 py-1.5 bg-cyan-500 text-slate-950 font-pixel text-[7px] shrink-0 cursor-pointer"
-                    >
-                      {tr ? 'HEMEN KUR' : 'INSTALL NOW'}
-                    </button>
-                  </div>
-                )}
-
-                {selectedPlatformNotice && (
-                  <div className="p-2.5 bg-amber-950/60 border border-amber-500/60 text-amber-200 text-[10px] leading-snug">
-                    ✓ {selectedPlatformNotice}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="bg-black/70 p-3 border border-slate-800 space-y-2.5 text-[10px] text-slate-300 overflow-y-auto mb-3">
-                <div className="flex items-center gap-1.5 text-emerald-400 font-pixel text-[8px]">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>{tr ? 'WEB VE NATIVE MAĞAZA SÜRÜMLERİ AYRILDI' : 'WEB & NATIVE STORE BUILDS SEPARATED'}</span>
-                </div>
-
-                <div className="space-y-1 bg-slate-900/80 p-2 border border-slate-800 font-mono text-[10px]">
-                  <div><span className="text-slate-400">Bundle / App ID:</span> <span className="text-amber-300">{APP_METADATA.appId}</span></div>
-                  <div><span className="text-slate-400">App Store 1024px RGB İkon:</span> <a href={APP_METADATA.appStoreIconPath} target="_blank" rel="noreferrer" className="text-cyan-400 underline">{APP_METADATA.appStoreIconPath}</a></div>
-                  <div><span className="text-slate-400">Google Play 512px İkon:</span> <a href={APP_METADATA.playStoreIconPath} target="_blank" rel="noreferrer" className="text-cyan-400 underline">{APP_METADATA.playStoreIconPath}</a></div>
-                  <div><span className="text-slate-400">Gizlilik Politikası URL:</span> <a href={APP_METADATA.privacyPolicyPath} target="_blank" rel="noreferrer" className="text-cyan-400 underline">{APP_METADATA.privacyPolicyPath}</a></div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <p className="font-pixel text-[7px] text-amber-400">
-                    {tr ? 'DERLEME KOMUTLARI (PACKAGE.JSON):' : 'BUILD COMMANDS:'}
-                  </p>
-                  <div className="bg-black p-2 border border-slate-800 font-mono text-[10px] space-y-1 text-slate-200">
-                    <div><span className="text-emerald-400">npm run build:web</span> &rarr; {tr ? 'Web Sürümü (İndirme Merkezi Aktif)' : 'Web Build'}</div>
-                    <div><span className="text-sky-400">npm run build:ios</span> &rarr; {tr ? 'Apple App Store (Xcode / IPA)' : 'iOS App Store Build'}</div>
-                    <div><span className="text-amber-400">npm run build:android</span> &rarr; {tr ? 'Google Play (AAB) & Doğrudan APK' : 'Android Play Store & APK Build'}</div>
-                  </div>
-                </div>
-
-                <p className="text-[10px] text-slate-400 leading-relaxed">
-                  {tr
-                    ? 'Not: Native (iOS/Android) derlemesinde dış mağaza indirme butonları Apple App Store (Kural 3.1/4.2) ve Google Play politikalarına tam uyum için otomatik gizlenir; arka plana alındığında oyun otomatik duraklatılır.'
-                    : 'Note: In Native builds, external store links are automatically hidden for App Store / Play Store review compliance, and gameplay auto-pauses when backgrounded.'}
-                </p>
-              </div>
-            )}
-
-            <button
-              onClick={() => setShowPlatformsModal(false)}
-              className="arcade-btn w-full py-2 bg-amber-500 text-slate-950 font-pixel text-[8px] cursor-pointer shrink-0"
-            >
-              {tr ? 'KAPAT' : 'CLOSE'}
             </button>
           </div>
         </div>

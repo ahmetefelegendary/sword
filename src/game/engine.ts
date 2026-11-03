@@ -3228,104 +3228,354 @@ export class GameEngine {
     for (const col of pillars) {
       ctx.save();
       // Drop Shadow on floor
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.42)';
       ctx.beginPath();
-      ctx.ellipse(col.x, col.y + 12, 16, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(col.x, col.y + 14, 18, 8, 0, 0, Math.PI * 2);
       ctx.fill();
 
       // Base Pedestal
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(col.x - 14, col.y + 4, 28, 12);
-      ctx.fillStyle = theme.pillarColor;
-      ctx.fillRect(col.x - 12, col.y + 5, 24, 10);
-      ctx.fillStyle = theme.pillarHighlight;
-      ctx.fillRect(col.x - 12, col.y + 5, 24, 2);
-
-      // Fluted Shaft
       ctx.fillStyle = '#090d16';
-      ctx.fillRect(col.x - 10, col.y - 18, 20, 24);
+      ctx.fillRect(col.x - 15, col.y + 4, 30, 14);
       ctx.fillStyle = theme.pillarColor;
-      ctx.fillRect(col.x - 9, col.y - 17, 18, 22);
+      ctx.fillRect(col.x - 13, col.y + 5, 26, 12);
       ctx.fillStyle = theme.pillarHighlight;
-      ctx.fillRect(col.x - 6, col.y - 17, 2, 22);
-      ctx.fillRect(col.x + 4, col.y - 17, 2, 22);
+      ctx.fillRect(col.x - 13, col.y + 5, 26, 2);
+
+      // Fluted Shaft with 3D chiseled ridges
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(col.x - 11, col.y - 20, 22, 26);
+      ctx.fillStyle = theme.pillarColor;
+      ctx.fillRect(col.x - 10, col.y - 19, 20, 24);
+      ctx.fillStyle = theme.pillarHighlight;
+      ctx.fillRect(col.x - 8, col.y - 19, 2, 24);
+      ctx.fillRect(col.x - 2, col.y - 19, 2, 24);
+      ctx.fillRect(col.x + 5, col.y - 19, 2, 24);
 
       // Ornate Capital Crown
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(col.x - 13, col.y - 24, 26, 8);
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(col.x - 14, col.y - 26, 28, 8);
       ctx.fillStyle = theme.pillarHighlight;
-      ctx.fillRect(col.x - 11, col.y - 23, 22, 6);
+      ctx.fillRect(col.x - 12, col.y - 25, 24, 6);
       ctx.fillStyle = theme.bannerColor;
-      ctx.fillRect(col.x - 2, col.y - 21, 4, 3);
+      ctx.fillRect(col.x - 3, col.y - 23, 6, 3);
+      ctx.restore();
+    }
+
+    // 3. West Crypts: Ancient Stone Sarcophagi with Carved Knight Crosses
+    const sarcophagi = [
+      { x: 190, y: cy - 90 },
+      { x: 190, y: cy + 90 },
+    ];
+    for (const sarc of sarcophagi) {
+      ctx.save();
+      // Sarcophagus ground shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.beginPath();
+      ctx.ellipse(sarc.x, sarc.y + 14, 20, 10, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Stone base plinth
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(sarc.x - 16, sarc.y - 8, 32, 20);
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(sarc.x - 15, sarc.y - 7, 30, 18);
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(sarc.x - 14, sarc.y - 6, 28, 16);
+
+      // Carved Effigy Lid (Heavy Stone with Highlight)
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(sarc.x - 13, sarc.y - 5, 26, 14);
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(sarc.x - 13, sarc.y - 5, 26, 2);
+      ctx.fillRect(sarc.x - 13, sarc.y - 5, 2, 14);
+
+      // Carved holy cross on lid
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(sarc.x - 1, sarc.y - 3, 3, 10);
+      ctx.fillRect(sarc.x - 5, sarc.y, 11, 3);
+      ctx.fillStyle = '#059669'; // moss creep on corner
+      ctx.fillRect(sarc.x - 14, sarc.y + 6, 4, 3);
+      ctx.fillRect(sarc.x + 10, sarc.y - 6, 3, 3);
+      ctx.restore();
+    }
+
+    // 4. East Armory: Ancient Blacksmith Forge & Coal Hearth
+    {
+      const forgeX = ARENA_WIDTH - 190;
+      const forgeY = cy;
+      ctx.save();
+      // Forge Hearth Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(forgeX, forgeY + 14, 22, 10, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hearth Stone Base
+      ctx.fillStyle = '#18181b';
+      ctx.fillRect(forgeX - 18, forgeY - 10, 36, 22);
+      ctx.fillStyle = '#27272a';
+      ctx.fillRect(forgeX - 16, forgeY - 8, 32, 18);
+      ctx.fillStyle = '#3f3f46';
+      ctx.fillRect(forgeX - 16, forgeY - 8, 32, 2);
+
+      // Glowing hot forge coals
+      ctx.fillStyle = '#7f1d1d';
+      ctx.fillRect(forgeX - 12, forgeY - 5, 24, 12);
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(forgeX - 10, forgeY - 4, 20, 10);
+      ctx.fillStyle = '#ea580c';
+      ctx.fillRect(forgeX - 7, forgeY - 3, 14, 8);
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(forgeX - 4, forgeY - 2, 8, 5);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(forgeX - 2, forgeY - 1, 3, 3);
       ctx.restore();
     }
   }
 
+  // --- MASTERPIECE PIXEL ART STONE WALL RENDERER ---
   private renderWalls(ctx: CanvasRenderingContext2D) {
     const theme = this.currentTheme;
     const cx = ARENA_WIDTH / 2;
 
-    // Outer wall base
-    ctx.fillStyle = theme.wallTop;
+    // 1. Deep Recessed Mortar Base Foundation
+    ctx.fillStyle = '#030712';
     ctx.fillRect(0, 0, ARENA_WIDTH, WALL_THICKNESS);
     ctx.fillRect(0, ARENA_HEIGHT - WALL_THICKNESS, ARENA_WIDTH, WALL_THICKNESS);
     ctx.fillRect(0, 0, WALL_THICKNESS, ARENA_HEIGHT);
     ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS, 0, WALL_THICKNESS, ARENA_HEIGHT);
 
-    // Wall face stone texture
-    ctx.fillStyle = theme.wallFace;
-    ctx.fillRect(0, WALL_THICKNESS - 12, ARENA_WIDTH, 12);
-    ctx.fillRect(0, ARENA_HEIGHT - WALL_THICKNESS, ARENA_WIDTH, 12);
-    ctx.fillRect(WALL_THICKNESS - 12, 0, 12, ARENA_HEIGHT);
-    ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS, 0, 12, ARENA_HEIGHT);
+    // 2. Multi-Course Hand-Crafted Stone Bricks (Top & Bottom Walls)
+    const brickW = 28;
+    const brickH = 11;
+    const courses = 3;
 
-    // Stone relief bevels
-    ctx.fillStyle = theme.wallBevel;
-    ctx.fillRect(WALL_THICKNESS - 3, 0, 3, ARENA_HEIGHT);
-    ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS, 0, 3, ARENA_HEIGHT);
-    ctx.fillRect(0, WALL_THICKNESS - 3, ARENA_WIDTH, 3);
-    ctx.fillRect(0, ARENA_HEIGHT - WALL_THICKNESS, ARENA_WIDTH, 3);
+    // Top Wall Stone Courses
+    for (let c = 0; c < courses; c++) {
+      const y = c * brickH + 1;
+      const offsetX = (c % 2 === 1) ? brickW / 2 : 0;
+      for (let x = WALL_THICKNESS; x < ARENA_WIDTH - WALL_THICKNESS; x += brickW) {
+        const bx = x + offsetX;
+        const bw = Math.min(brickW - 2, ARENA_WIDTH - WALL_THICKNESS - bx);
+        if (bw <= 4) continue;
 
-    // Accent line along bottom edge of top wall
+        // Brick body
+        ctx.fillStyle = (c === 2) ? theme.wallFace : theme.wallTop;
+        ctx.fillRect(bx, y, bw, brickH - 2);
+
+        // Chiseled Stone Bevels (Light from top-left)
+        ctx.fillStyle = theme.wallBevel;
+        ctx.fillRect(bx, y, bw, 1);
+        ctx.fillRect(bx, y, 1, brickH - 2);
+
+        // Mortar drop shadow (Bottom/right edge)
+        ctx.fillStyle = '#050811';
+        ctx.fillRect(bx, y + brickH - 3, bw, 1);
+        ctx.fillRect(bx + bw - 1, y, 1, brickH - 2);
+
+        // Weathered chipped stone pits
+        if ((bx * 7 + c * 13) % 5 === 0) {
+          ctx.fillStyle = '#090d16';
+          ctx.fillRect(bx + 4, y + 4, 2, 1);
+        }
+      }
+    }
+
+    // Bottom Wall Stone Courses
+    for (let c = 0; c < courses; c++) {
+      const y = ARENA_HEIGHT - WALL_THICKNESS + c * brickH + 1;
+      const offsetX = (c % 2 === 1) ? brickW / 2 : 0;
+      for (let x = WALL_THICKNESS; x < ARENA_WIDTH - WALL_THICKNESS; x += brickW) {
+        const bx = x + offsetX;
+        const bw = Math.min(brickW - 2, ARENA_WIDTH - WALL_THICKNESS - bx);
+        if (bw <= 4) continue;
+
+        ctx.fillStyle = (c === 0) ? theme.wallFace : theme.wallTop;
+        ctx.fillRect(bx, y, bw, brickH - 2);
+
+        ctx.fillStyle = theme.wallBevel;
+        ctx.fillRect(bx, y, bw, 1);
+        ctx.fillRect(bx, y, 1, brickH - 2);
+
+        ctx.fillStyle = '#050811';
+        ctx.fillRect(bx, y + brickH - 3, bw, 1);
+        ctx.fillRect(bx + bw - 1, y, 1, brickH - 2);
+      }
+    }
+
+    // Left Wall Stone Courses
+    for (let y = WALL_THICKNESS; y < ARENA_HEIGHT - WALL_THICKNESS; y += 18) {
+      ctx.fillStyle = theme.wallFace;
+      ctx.fillRect(1, y + 1, WALL_THICKNESS - 3, 16);
+      ctx.fillStyle = theme.wallBevel;
+      ctx.fillRect(1, y + 1, WALL_THICKNESS - 3, 1);
+      ctx.fillRect(1, y + 1, 1, 16);
+      ctx.fillStyle = '#050811';
+      ctx.fillRect(1, y + 16, WALL_THICKNESS - 3, 1);
+      ctx.fillRect(WALL_THICKNESS - 3, y + 1, 1, 16);
+    }
+
+    // Right Wall Stone Courses
+    for (let y = WALL_THICKNESS; y < ARENA_HEIGHT - WALL_THICKNESS; y += 18) {
+      ctx.fillStyle = theme.wallFace;
+      ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS + 2, y + 1, WALL_THICKNESS - 3, 16);
+      ctx.fillStyle = theme.wallBevel;
+      ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS + 2, y + 1, WALL_THICKNESS - 3, 1);
+      ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS + 2, y + 1, 1, 16);
+      ctx.fillStyle = '#050811';
+      ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS + 2, y + 16, WALL_THICKNESS - 3, 1);
+      ctx.fillRect(ARENA_WIDTH - 2, y + 1, 1, 16);
+    }
+
+    // 3. Wall Battlements & Parapet Merlons along Top Wall
+    for (let mx = WALL_THICKNESS; mx < ARENA_WIDTH - WALL_THICKNESS; mx += 36) {
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(mx + 2, 0, 18, 5);
+      ctx.fillStyle = theme.wallBevel;
+      ctx.fillRect(mx + 3, 1, 16, 3);
+      ctx.fillStyle = theme.wallAccent;
+      ctx.fillRect(mx + 4, 1, 14, 1);
+    }
+
+    // 4. Accent Gold/Bronze Trim along wall-floor boundary
     ctx.fillStyle = theme.wallAccent;
     ctx.fillRect(WALL_THICKNESS, WALL_THICKNESS - 2, ARENA_WIDTH - WALL_THICKNESS * 2, 2);
+    ctx.fillRect(WALL_THICKNESS, ARENA_HEIGHT - WALL_THICKNESS, ARENA_WIDTH - WALL_THICKNESS * 2, 2);
+    ctx.fillRect(WALL_THICKNESS - 2, WALL_THICKNESS, 2, ARENA_HEIGHT - WALL_THICKNESS * 2);
+    ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS, WALL_THICKNESS, 2, ARENA_HEIGHT - WALL_THICKNESS * 2);
 
-    // Hanging Heraldic Wall Banners on Top Wall
-    const bannerPositions = [220, 460, cx - 180, cx + 180, ARENA_WIDTH - 460, ARENA_WIDTH - 220];
-    for (const bx of bannerPositions) {
-      // Wood/Iron hanging rod
+    // 5. Hanging Heavy Iron Dungeon Chains & Open Shackles
+    const chainPositions = [140, 360, cx - 320, cx + 320, ARENA_WIDTH - 360, ARENA_WIDTH - 140];
+    for (const chx of chainPositions) {
+      // Iron wall ring
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(chx - 3, 6, 6, 6);
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(chx - 2, 7, 4, 4);
+      ctx.fillStyle = '#030712';
+      ctx.fillRect(chx - 1, 8, 2, 2);
+
+      // Alternating interlocking chain links
+      for (let l = 0; l < 4; l++) {
+        const ly = 12 + l * 5;
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(chx - 1, ly, 3, 4);
+        ctx.fillStyle = '#64748b';
+        ctx.fillRect(chx, ly, 1, 3);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(chx, ly, 1, 1);
+      }
+
+      // Open Heavy Iron Shackle Cuff
+      const cuffY = 32;
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(chx - 4, cuffY, 8, 4);
       ctx.fillStyle = '#64748b';
-      ctx.fillRect(bx - 12, 4, 24, 3);
+      ctx.fillRect(chx - 3, cuffY + 1, 6, 2);
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(chx - 1, cuffY + 1, 2, 3);
+    }
+
+    // 6. Mounted Heraldic Heater Wall Shields (Between Banners)
+    const shieldPositions = [300, cx, ARENA_WIDTH - 300];
+    for (const sx of shieldPositions) {
+      // Shield mount bracket
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(sx - 2, 8, 4, 4);
+
+      // Heater shield shape
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(sx - 7, 10, 14, 15);
+      ctx.beginPath();
+      ctx.moveTo(sx - 7, 25);
+      ctx.lineTo(sx, 31);
+      ctx.lineTo(sx + 7, 25);
+      ctx.fill();
+
+      // Shield heraldic field
+      ctx.fillStyle = theme.bannerColor;
+      ctx.fillRect(sx - 5, 12, 10, 12);
+      ctx.beginPath();
+      ctx.moveTo(sx - 5, 24);
+      ctx.lineTo(sx, 29);
+      ctx.lineTo(sx + 5, 24);
+      ctx.fill();
+
+      // Golden heraldic cross on shield
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(sx - 1, 13, 2, 13);
+      ctx.fillRect(sx - 4, 16, 8, 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(sx - 1, 16, 2, 2);
+    }
+
+    // 7. Hanging Royal Wall Banners on Top Wall
+    const bannerPositions = [200, 440, cx - 160, cx + 160, ARENA_WIDTH - 440, ARENA_WIDTH - 200];
+    for (const bx of bannerPositions) {
+      // Wood/Iron hanging rod with golden finials
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(bx - 14, 4, 28, 3);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(bx - 16, 3, 3, 5);
+      ctx.fillRect(bx + 13, 3, 3, 5);
 
       // Banner fabric
       ctx.fillStyle = theme.bannerFabric;
-      ctx.fillRect(bx - 10, 7, 20, 20);
+      ctx.fillRect(bx - 11, 7, 22, 22);
       // Swallowtail V-cut at bottom
       ctx.beginPath();
-      ctx.moveTo(bx - 10, 27);
-      ctx.lineTo(bx, 33);
-      ctx.lineTo(bx + 10, 27);
-      ctx.lineTo(bx + 10, 7);
-      ctx.lineTo(bx - 10, 7);
+      ctx.moveTo(bx - 11, 29);
+      ctx.lineTo(bx, 36);
+      ctx.lineTo(bx + 11, 29);
+      ctx.lineTo(bx + 11, 7);
+      ctx.lineTo(bx - 11, 7);
       ctx.fill();
 
-      // Gold fringe trim
+      // Gold fringe trim & emblem
       ctx.fillStyle = theme.bannerTrim;
-      ctx.fillRect(bx - 8, 9, 16, 2);
-      ctx.fillRect(bx - 2, 13, 4, 7);
-      ctx.fillRect(bx - 5, 15, 10, 3);
+      ctx.fillRect(bx - 9, 9, 18, 2);
+      ctx.fillRect(bx - 2, 14, 4, 8);
+      ctx.fillRect(bx - 5, 17, 10, 2);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(bx - 1, 17, 2, 2);
     }
 
-    // Torches
+    // 8. Hand-Forged Gothic Wrought Iron Torches
     for (const torch of this.torches) {
-      // Bracket
+      // Forged Iron Wall Mounting Plate
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(torch.x - 3, torch.y - 4, 6, 9);
       ctx.fillStyle = '#475569';
-      ctx.fillRect(torch.x - 2, torch.y - 2, 4, 8);
-      // Flame pixels
+      ctx.fillRect(torch.x - 2, torch.y - 3, 4, 7);
+      // Copper mounting rivets
+      ctx.fillStyle = '#ca8a04';
+      ctx.fillRect(torch.x - 2, torch.y - 3, 1, 1);
+      ctx.fillRect(torch.x + 1, torch.y - 3, 1, 1);
+      ctx.fillRect(torch.x - 2, torch.y + 2, 1, 1);
+      ctx.fillRect(torch.x + 1, torch.y + 2, 1, 1);
+
+      // Curled wrought iron arm extending upward
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(torch.x - 4, torch.y - 6, 8, 3);
+      ctx.fillRect(torch.x - 3, torch.y - 8, 6, 3);
+
+      // Animated 4-Frame Pixel Flame
+      const fShift = Math.sin(performance.now() * 0.015 + torch.x) * 1.5;
+      // Outer intense red/orange flame tongue
+      ctx.fillStyle = '#ea580c';
+      ctx.fillRect(torch.x - 4 + fShift * 0.5, torch.y - 14, 8, 7);
+      ctx.fillRect(torch.x - 2 + fShift, torch.y - 17, 4, 4);
+
+      // Bright amber flame center
       ctx.fillStyle = torch.color;
-      ctx.fillRect(torch.x - 3, torch.y - 6 + torch.flicker * 3, 6, 6);
-      ctx.fillStyle = theme.torchInner;
-      ctx.fillRect(torch.x - 1, torch.y - 5 + torch.flicker * 2, 2, 3);
+      ctx.fillRect(torch.x - 3 + fShift * 0.5, torch.y - 13, 6, 5);
+      ctx.fillRect(torch.x - 1 + fShift, torch.y - 15, 2, 3);
+
+      // White-hot flame core
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(torch.x - 2 + fShift * 0.5, torch.y - 12, 4, 3);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(torch.x - 1 + fShift * 0.5, torch.y - 11, 2, 2);
     }
   }
 
