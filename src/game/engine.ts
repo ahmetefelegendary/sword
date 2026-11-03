@@ -29,7 +29,7 @@ export const VIEW_WIDTH = 760;
 export const VIEW_HEIGHT = 500;
 export const ARENA_WIDTH = 1440;
 export const ARENA_HEIGHT = 960;
-export const WALL_THICKNESS = 36;
+export const WALL_THICKNESS = 44;
 
 export interface DungeonThemeConfig {
   id: DungeonBiomeId;
@@ -59,20 +59,20 @@ export const DUNGEON_THEMES: Record<DungeonBiomeId, DungeonThemeConfig> = {
     name: 'Ancient Catacombs',
     nameTr: 'Antik Taş Mahzen',
     subtitle: 'Mossy crypts of the fallen paladins',
-    subtitleTr: 'Düşmüş şövalyelerin yosunlu mahzenleri',
-    bannerColor: '#34d399',
-    wallTop: '#090d16',
-    wallFace: '#1e293b',
-    wallBevel: '#334155',
-    wallAccent: '#059669',
+    subtitleTr: 'Düşmüş şövalyelerin kadim taş mahzenleri',
+    bannerColor: '#f59e0b',
+    wallTop: '#272229',
+    wallFace: '#38303a',
+    wallBevel: '#554958',
+    wallAccent: '#6d5f57',
     torchFlame: '#f59e0b',
     torchInner: '#fef08a',
-    torchGlow: 'rgba(245, 158, 11, 0.18)',
-    pillarColor: '#334155',
-    pillarHighlight: '#64748b',
-    bannerFabric: '#047857',
-    bannerTrim: '#fbbf24',
-    ambientParticleColor: '#6ee7b7',
+    torchGlow: 'rgba(245, 158, 11, 0.28)',
+    pillarColor: '#38303a',
+    pillarHighlight: '#655a69',
+    bannerFabric: '#7f1d1d',
+    bannerTrim: '#d97706',
+    ambientParticleColor: '#a8a29e',
     ambientParticleType: 'dust',
   },
   magma: {
@@ -82,17 +82,17 @@ export const DUNGEON_THEMES: Record<DungeonBiomeId, DungeonThemeConfig> = {
     subtitle: 'Infernal crucible where cursed weapons are forged',
     subtitleTr: 'Lanetli silahların dövüldüğü cehennem ocağı',
     bannerColor: '#f97316',
-    wallTop: '#0c0704',
-    wallFace: '#1c1917',
-    wallBevel: '#44403c',
-    wallAccent: '#ea580c',
+    wallTop: '#1c1412',
+    wallFace: '#291e1c',
+    wallBevel: '#4a3430',
+    wallAccent: '#6b4741',
     torchFlame: '#ea580c',
     torchInner: '#fde047',
-    torchGlow: 'rgba(234, 88, 12, 0.22)',
-    pillarColor: '#292524',
-    pillarHighlight: '#9a3412',
-    bannerFabric: '#b91c1c',
-    bannerTrim: '#f97316',
+    torchGlow: 'rgba(234, 88, 12, 0.25)',
+    pillarColor: '#291e1c',
+    pillarHighlight: '#7c2d12',
+    bannerFabric: '#991b1b',
+    bannerTrim: '#ea580c',
     ambientParticleColor: '#fb923c',
     ambientParticleType: 'ember',
   },
@@ -103,14 +103,14 @@ export const DUNGEON_THEMES: Record<DungeonBiomeId, DungeonThemeConfig> = {
     subtitle: 'Submerged halls resonant with ancient tides',
     subtitleTr: 'Kadim gelgitlerin yankılandığı sular altındaki tapınak',
     bannerColor: '#06b6d4',
-    wallTop: '#021817',
-    wallFace: '#0f2e2e',
-    wallBevel: '#134e4a',
-    wallAccent: '#0d9488',
+    wallTop: '#152126',
+    wallFace: '#1e2e34',
+    wallBevel: '#334c56',
+    wallAccent: '#486875',
     torchFlame: '#06b6d4',
     torchInner: '#e0f2fe',
-    torchGlow: 'rgba(6, 182, 212, 0.2)',
-    pillarColor: '#115e59',
+    torchGlow: 'rgba(6, 182, 212, 0.24)',
+    pillarColor: '#1e2e34',
     pillarHighlight: '#2dd4bf',
     bannerFabric: '#0e7490',
     bannerTrim: '#67e8f9',
@@ -124,14 +124,14 @@ export const DUNGEON_THEMES: Record<DungeonBiomeId, DungeonThemeConfig> = {
     subtitle: 'Sacred halls of the shadow archmages',
     subtitleTr: 'Gölge başbüyücülerinin gizemli mabedi',
     bannerColor: '#c084fc',
-    wallTop: '#06020c',
-    wallFace: '#1e1b4b',
-    wallBevel: '#312e81',
-    wallAccent: '#7e22ce',
+    wallTop: '#181422',
+    wallFace: '#241f32',
+    wallBevel: '#3e3454',
+    wallAccent: '#584a75',
     torchFlame: '#c084fc',
     torchInner: '#fae8ff',
-    torchGlow: 'rgba(192, 132, 252, 0.22)',
-    pillarColor: '#2e1065',
+    torchGlow: 'rgba(192, 132, 252, 0.24)',
+    pillarColor: '#241f32',
     pillarHighlight: '#a855f7',
     bannerFabric: '#4c1d95',
     bannerTrim: '#eab308',
@@ -144,19 +144,19 @@ export const DUNGEON_THEMES: Record<DungeonBiomeId, DungeonThemeConfig> = {
     nameTr: 'Kraliyet Kalesi',
     subtitle: 'Imperial seat guarded by the Titan Golem',
     subtitleTr: 'Taş Titan Golem tarafından korunan imparatorluk kalesi',
-    bannerColor: '#fbbf24',
-    wallTop: '#090807',
-    wallFace: '#292524',
-    wallBevel: '#44403c',
-    wallAccent: '#991b1b',
-    torchFlame: '#fbbf24',
-    torchInner: '#ffffff',
-    torchGlow: 'rgba(251, 191, 36, 0.22)',
-    pillarColor: '#1c1917',
-    pillarHighlight: '#d97706',
-    bannerFabric: '#7f1d1d',
-    bannerTrim: '#facc15',
-    ambientParticleColor: '#fde047',
+    bannerColor: '#f59e0b',
+    wallTop: '#1e191a',
+    wallFace: '#2b2526',
+    wallBevel: '#443a3c',
+    wallAccent: '#5c4f52',
+    torchFlame: '#f59e0b',
+    torchInner: '#fef3c7',
+    torchGlow: 'rgba(245, 158, 11, 0.28)',
+    pillarColor: '#2b2526',
+    pillarHighlight: '#5c4f52',
+    bannerFabric: '#78350f',
+    bannerTrim: '#fbbf24',
+    ambientParticleColor: '#fbbf24',
     ambientParticleType: 'gold_fleck',
   },
 };
@@ -526,59 +526,64 @@ export class GameEngine {
   }
 
   private setupArenaProps() {
-    const theme = this.currentBiome;
     const cx = ARENA_WIDTH / 2;
     const cy = ARENA_HEIGHT / 2;
 
     this.props = [
-      // Central sanctum chests & urns
-      { id: 'chest_1', x: cx, y: 120, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
-      { id: 'chest_2', x: cx, y: ARENA_HEIGHT - 120, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
+      // Top-Left corner Jonik9i cluster: Oak Barrels, Planks, and Rubble (Image 3)
+      { id: 'barrel_nw1', x: 130, y: 120, width: 18, height: 22, hp: 1, type: 'barrel' },
+      { id: 'barrel_nw2', x: 152, y: 140, width: 18, height: 22, hp: 1, type: 'barrel' },
+      { id: 'planks_nw', x: 205, y: 145, width: 26, height: 16, hp: 1, type: 'planks' },
+      { id: 'rubble_nw', x: 215, y: 125, width: 24, height: 16, hp: 1, type: 'rubble' },
 
-      // West Crypts (Pots, Urns, Skull piles)
-      { id: 'prop_w1', x: 120, y: 160, width: 16, height: 16, hp: 1, type: 'pot' },
-      { id: 'prop_w2', x: 160, y: 160, width: 16, height: 18, hp: 1, type: 'urn' },
-      { id: 'prop_w3', x: 140, y: cy, width: 16, height: 16, hp: 1, type: 'skull_pile' },
-      { id: 'prop_w4', x: 120, y: ARENA_HEIGHT - 160, width: 16, height: 18, hp: 1, type: 'urn' },
-      { id: 'prop_w5', x: 160, y: ARENA_HEIGHT - 160, width: 16, height: 16, hp: 1, type: 'pot' },
+      // Top Wall / Door Corridor: Dungeon Chests & Crates (Image 3)
+      { id: 'chest_n1', x: cx + 90, y: 105, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
+      { id: 'crate_n1', x: cx + 155, y: 100, width: 18, height: 18, hp: 1, type: 'crate' },
+      { id: 'crate_n2', x: cx + 155, y: 122, width: 18, height: 18, hp: 1, type: 'crate' },
+      { id: 'rubble_n', x: cx - 180, y: 110, width: 24, height: 16, hp: 1, type: 'rubble' },
 
-      // East Armory & Forge (Anvils, Crates, Crystals)
-      { id: 'prop_e1', x: ARENA_WIDTH - 160, y: 160, width: 20, height: 16, hp: 1, type: 'anvil' },
-      { id: 'prop_e2', x: ARENA_WIDTH - 120, y: 160, width: 18, height: 18, hp: 1, type: 'crate' },
-      { id: 'prop_e3', x: ARENA_WIDTH - 140, y: cy, width: 18, height: 18, hp: 1, type: 'crystal' },
-      { id: 'prop_e4', x: ARENA_WIDTH - 160, y: ARENA_HEIGHT - 160, width: 18, height: 18, hp: 1, type: 'crate' },
-      { id: 'prop_e5', x: ARENA_WIDTH - 120, y: ARENA_HEIGHT - 160, width: 20, height: 16, hp: 1, type: 'anvil' },
+      // Bottom-Right corner Jonik9i cluster: Oak Barrel, Fallen Beams, Rubble (Image 3)
+      { id: 'barrel_se', x: ARENA_WIDTH - 140, y: ARENA_HEIGHT - 130, width: 18, height: 22, hp: 1, type: 'barrel' },
+      { id: 'planks_se', x: ARENA_WIDTH - 185, y: ARENA_HEIGHT - 120, width: 26, height: 16, hp: 1, type: 'planks' },
+      { id: 'rubble_se', x: ARENA_WIDTH - 170, y: ARENA_HEIGHT - 148, width: 24, height: 16, hp: 1, type: 'rubble' },
 
-      // North Hall decorative pots
-      { id: 'prop_n1', x: cx - 220, y: 110, width: 16, height: 18, hp: 1, type: 'urn' },
-      { id: 'prop_n2', x: cx + 220, y: 110, width: 16, height: 18, hp: 1, type: 'urn' },
+      // South-West corner: Crate & Rubble
+      { id: 'crate_sw', x: 130, y: ARENA_HEIGHT - 125, width: 18, height: 18, hp: 1, type: 'crate' },
+      { id: 'rubble_sw', x: 170, y: ARENA_HEIGHT - 120, width: 24, height: 16, hp: 1, type: 'rubble' },
 
-      // South Bastion crates
-      { id: 'prop_s1', x: cx - 220, y: ARENA_HEIGHT - 110, width: 18, height: 18, hp: 1, type: 'crate' },
-      { id: 'prop_s2', x: cx + 220, y: ARENA_HEIGHT - 110, width: 18, height: 18, hp: 1, type: 'crate' },
+      // Mid-West Alcove: Chest, Planks & Rubble
+      { id: 'chest_w', x: 115, y: cy + 35, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
+      { id: 'planks_w', x: 165, y: cy + 55, width: 26, height: 16, hp: 1, type: 'planks' },
+      { id: 'rubble_w', x: 180, y: cy + 35, width: 24, height: 16, hp: 1, type: 'rubble' },
+
+      // East Wall: Anvil, Oak Barrels, and Crates
+      { id: 'prop_e1', x: ARENA_WIDTH - 130, y: 140, width: 20, height: 16, hp: 1, type: 'anvil' },
+      { id: 'barrel_e2', x: ARENA_WIDTH - 150, y: cy - 20, width: 18, height: 22, hp: 1, type: 'barrel' },
+      { id: 'crate_e3', x: ARENA_WIDTH - 135, y: cy + 25, width: 18, height: 18, hp: 1, type: 'crate' },
+
+      // Center-South Treasure Chest
+      { id: 'chest_s', x: cx, y: ARENA_HEIGHT - 115, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
     ];
   }
 
   private setupTorches() {
     const flame = this.currentTheme?.torchFlame || '#f59e0b';
     this.torches = [
-      // Top wall (4 torches)
-      { x: 260, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
-      { x: 540, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - 540, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - 260, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
+      // Top wall (mounted directly on stone face, flanking doors & alcoves)
+      { x: 380, y: WALL_THICKNESS - 12, flicker: 0, color: flame },
+      { x: ARENA_WIDTH / 2, y: WALL_THICKNESS - 12, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - 380, y: WALL_THICKNESS - 12, flicker: 0, color: flame },
 
-      // Bottom wall (4 torches)
-      { x: 260, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
-      { x: 540, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - 540, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - 260, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
+      // Bottom wall
+      { x: 380, y: ARENA_HEIGHT - WALL_THICKNESS + 12, flicker: 0, color: flame },
+      { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT - WALL_THICKNESS + 12, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - 380, y: ARENA_HEIGHT - WALL_THICKNESS + 12, flicker: 0, color: flame },
 
-      // Left & Right walls (4 torches)
-      { x: WALL_THICKNESS + 8, y: 320, flicker: 0, color: flame },
-      { x: WALL_THICKNESS + 8, y: ARENA_HEIGHT - 320, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - WALL_THICKNESS - 8, y: 320, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - WALL_THICKNESS - 8, y: ARENA_HEIGHT - 320, flicker: 0, color: flame },
+      // Left & Right walls (casting amber glow down floor perimeter)
+      { x: WALL_THICKNESS - 12, y: 340, flicker: 0, color: flame },
+      { x: WALL_THICKNESS - 12, y: ARENA_HEIGHT - 340, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - WALL_THICKNESS + 12, y: 340, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - WALL_THICKNESS + 12, y: ARENA_HEIGHT - 340, flicker: 0, color: flame },
     ];
   }
 
@@ -888,7 +893,7 @@ export class GameEngine {
         };
       }
       case 'MAGE': {
-        const hp = Math.round(64 * hpScale);
+        const hp = Math.round(42 * hpScale);
         return {
           id,
           type,
@@ -900,17 +905,17 @@ export class GameEngine {
           height: 28,
           hp,
           maxHp: hp,
-          speed: Math.round(58 * spdScale),
+          speed: Math.round(54 * spdScale),
           damage: 1 + dmgBonus,
           facing: 'left',
           state: 'chase',
           stateTimer: 0,
           telegraphTimer: 0,
-          telegraphMax: Math.max(0.5, 0.8 * cdScale),
+          telegraphMax: Math.max(0.65, 0.9 * cdScale),
           targetX: 0,
           targetY: 0,
-          attackCooldown: 2.8 * cdScale,
-          teleportCooldown: 3.5,
+          attackCooldown: 3.2 * cdScale,
+          teleportCooldown: 4.8,
           flashTimer: 0,
           scaleX: 1,
           scaleY: 1,
@@ -919,7 +924,7 @@ export class GameEngine {
         };
       }
       case 'BOSS_GOLEM': {
-        const bossHp = Math.round(300 + w * 25);
+        const bossHp = Math.round(180 + w * 16);
         return {
           id,
           type,
@@ -931,16 +936,16 @@ export class GameEngine {
           height: 52,
           hp: bossHp,
           maxHp: bossHp,
-          speed: Math.min(80, 52 + w * 2),
+          speed: Math.min(72, 48 + w * 1.5),
           damage: 1,
           facing: 'left',
           state: 'chase',
           stateTimer: 0,
           telegraphTimer: 0,
-          telegraphMax: 0.85,
+          telegraphMax: 0.95,
           targetX: 0,
           targetY: 0,
-          attackCooldown: 1.5,
+          attackCooldown: 1.8,
           flashTimer: 0,
           scaleX: 1,
           scaleY: 1,
@@ -2957,6 +2962,94 @@ export class GameEngine {
     const cx = ARENA_WIDTH / 2;
     const cy = ARENA_HEIGHT / 2;
 
+    // --- 0. JONIK9I-STYLE PERIMETER DARK BORDER FLAGSTONES (Image 3) ---
+    // A border of dark slate rectangular flagstones framing the entire octagonal room
+    const borderW = 28;
+    const flagW = 28;
+
+    // Top Flagstone Border
+    for (let x = WALL_THICKNESS; x < ARENA_WIDTH - WALL_THICKNESS; x += flagW) {
+      const fw = Math.min(flagW - 2, ARENA_WIDTH - WALL_THICKNESS - x);
+      ctx.fillStyle = '#1c1820'; // dark mortar
+      ctx.fillRect(x, WALL_THICKNESS, fw + 2, borderW);
+      ctx.fillStyle = '#2b252f'; // slate base
+      ctx.fillRect(x + 1, WALL_THICKNESS + 1, fw, borderW - 2);
+      ctx.fillStyle = '#3a323f'; // flagstone face
+      ctx.fillRect(x + 2, WALL_THICKNESS + 2, fw - 2, borderW - 4);
+      // Chiseled highlights
+      ctx.fillStyle = '#4e4354';
+      ctx.fillRect(x + 1, WALL_THICKNESS + 1, fw, 1);
+      ctx.fillRect(x + 1, WALL_THICKNESS + 1, 1, borderW - 2);
+      // Inner shadow edge where it meets floor
+      ctx.fillStyle = '#141117';
+      ctx.fillRect(x + 1, WALL_THICKNESS + borderW - 1, fw, 1);
+    }
+
+    // Bottom Flagstone Border
+    const botY = ARENA_HEIGHT - WALL_THICKNESS - borderW;
+    for (let x = WALL_THICKNESS; x < ARENA_WIDTH - WALL_THICKNESS; x += flagW) {
+      const fw = Math.min(flagW - 2, ARENA_WIDTH - WALL_THICKNESS - x);
+      ctx.fillStyle = '#1c1820';
+      ctx.fillRect(x, botY, fw + 2, borderW);
+      ctx.fillStyle = '#2b252f';
+      ctx.fillRect(x + 1, botY + 1, fw, borderW - 2);
+      ctx.fillStyle = '#3a323f';
+      ctx.fillRect(x + 2, botY + 2, fw - 2, borderW - 4);
+      ctx.fillStyle = '#4e4354';
+      ctx.fillRect(x + 1, botY + 1, fw, 1);
+      ctx.fillRect(x + 1, botY + 1, 1, borderW - 2);
+      ctx.fillStyle = '#141117';
+      ctx.fillRect(x + 1, botY + 1, fw, 1);
+    }
+
+    // Left Flagstone Border
+    for (let y = WALL_THICKNESS + borderW; y < ARENA_HEIGHT - WALL_THICKNESS - borderW; y += flagW) {
+      const fh = Math.min(flagW - 2, ARENA_HEIGHT - WALL_THICKNESS - borderW - y);
+      ctx.fillStyle = '#1c1820';
+      ctx.fillRect(WALL_THICKNESS, y, borderW, fh + 2);
+      ctx.fillStyle = '#2b252f';
+      ctx.fillRect(WALL_THICKNESS + 1, y + 1, borderW - 2, fh);
+      ctx.fillStyle = '#3a323f';
+      ctx.fillRect(WALL_THICKNESS + 2, y + 2, borderW - 4, fh - 2);
+      ctx.fillStyle = '#4e4354';
+      ctx.fillRect(WALL_THICKNESS + 1, y + 1, borderW - 2, 1);
+      ctx.fillRect(WALL_THICKNESS + 1, y + 1, 1, fh);
+      ctx.fillStyle = '#141117';
+      ctx.fillRect(WALL_THICKNESS + borderW - 1, y + 1, 1, fh);
+    }
+
+    // Right Flagstone Border
+    const rightX = ARENA_WIDTH - WALL_THICKNESS - borderW;
+    for (let y = WALL_THICKNESS + borderW; y < ARENA_HEIGHT - WALL_THICKNESS - borderW; y += flagW) {
+      const fh = Math.min(flagW - 2, ARENA_HEIGHT - WALL_THICKNESS - borderW - y);
+      ctx.fillStyle = '#1c1820';
+      ctx.fillRect(rightX, y, borderW, fh + 2);
+      ctx.fillStyle = '#2b252f';
+      ctx.fillRect(rightX + 1, y + 1, borderW - 2, fh);
+      ctx.fillStyle = '#3a323f';
+      ctx.fillRect(rightX + 2, y + 2, borderW - 4, fh - 2);
+      ctx.fillStyle = '#4e4354';
+      ctx.fillRect(rightX + 1, y + 1, borderW - 2, 1);
+      ctx.fillRect(rightX + 1, y + 1, 1, fh);
+      ctx.fillStyle = '#141117';
+      ctx.fillRect(rightX, y + 1, 1, fh);
+    }
+
+    // Subtle weathered floor cracks and stone chips (Image 3)
+    const chips = [
+      { x: 340, y: 280 }, { x: 520, y: 380 }, { x: 790, y: 260 }, { x: 980, y: 340 },
+      { x: 420, y: 640 }, { x: 620, y: 580 }, { x: 860, y: 680 }, { x: 1080, y: 590 },
+      { x: 260, y: 480 }, { x: 1220, y: 440 }
+    ];
+    for (const chip of chips) {
+      ctx.fillStyle = '#1e1922';
+      ctx.fillRect(chip.x, chip.y, 4, 3);
+      ctx.fillStyle = '#554958';
+      ctx.fillRect(chip.x + 1, chip.y, 2, 1);
+      ctx.fillStyle = '#7e7183';
+      ctx.fillRect(chip.x, chip.y + 1, 1, 1);
+    }
+
     // 1. Centerpiece Architecture based on active theme
     if (theme.id === 'catacombs') {
       // Grand Ancient Stone Ritual Circle
@@ -3333,26 +3426,46 @@ export class GameEngine {
     }
   }
 
-  // --- MASTERPIECE PIXEL ART STONE WALL RENDERER ---
+  // --- MASTERPIECE PIXEL ART STONE WALL RENDERER (Matching Jonik9i Style - Image 3) ---
   private renderWalls(ctx: CanvasRenderingContext2D) {
     const theme = this.currentTheme;
     const cx = ARENA_WIDTH / 2;
 
     // 1. Deep Recessed Mortar Base Foundation
-    ctx.fillStyle = '#030712';
+    ctx.fillStyle = '#0f0c13';
     ctx.fillRect(0, 0, ARENA_WIDTH, WALL_THICKNESS);
     ctx.fillRect(0, ARENA_HEIGHT - WALL_THICKNESS, ARENA_WIDTH, WALL_THICKNESS);
     ctx.fillRect(0, 0, WALL_THICKNESS, ARENA_HEIGHT);
     ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS, 0, WALL_THICKNESS, ARENA_HEIGHT);
 
-    // 2. Multi-Course Hand-Crafted Stone Bricks (Top & Bottom Walls)
+    // 2. Parapet Stone Coping (Ledge running along the top of all walls - Image 3)
+    const copingH = 12;
+    const copingSlabW = 32;
+    for (let x = 0; x < ARENA_WIDTH; x += copingSlabW) {
+      const sw = Math.min(copingSlabW - 1, ARENA_WIDTH - x);
+      // Dark mortar joint
+      ctx.fillStyle = '#1a1618';
+      ctx.fillRect(x, 0, sw + 1, copingH);
+      // Coping stone base
+      ctx.fillStyle = '#443a3c';
+      ctx.fillRect(x + 1, 1, sw - 1, copingH - 2);
+      // Top beveled highlight (lit from top)
+      ctx.fillStyle = theme.wallAccent; // #6d5f57 / #827269
+      ctx.fillRect(x + 1, 1, sw - 1, 2);
+      ctx.fillRect(x + 1, 1, 1, copingH - 2);
+      // Overhang drop shadow line onto the brick wall below
+      ctx.fillStyle = '#120f12';
+      ctx.fillRect(x + 1, copingH - 1, sw - 1, 1);
+    }
+
+    // 3. Multi-Course Stone Brick Wall Face (3 courses of stone blocks)
     const brickW = 28;
-    const brickH = 11;
+    const brickH = 10;
     const courses = 3;
 
-    // Top Wall Stone Courses
+    // Top Wall Brick Courses (y: copingH to WALL_THICKNESS)
     for (let c = 0; c < courses; c++) {
-      const y = c * brickH + 1;
+      const y = copingH + c * brickH + 1;
       const offsetX = (c % 2 === 1) ? brickW / 2 : 0;
       for (let x = WALL_THICKNESS; x < ARENA_WIDTH - WALL_THICKNESS; x += brickW) {
         const bx = x + offsetX;
@@ -3369,13 +3482,13 @@ export class GameEngine {
         ctx.fillRect(bx, y, 1, brickH - 2);
 
         // Mortar drop shadow (Bottom/right edge)
-        ctx.fillStyle = '#050811';
+        ctx.fillStyle = '#16121a';
         ctx.fillRect(bx, y + brickH - 3, bw, 1);
         ctx.fillRect(bx + bw - 1, y, 1, brickH - 2);
 
         // Weathered chipped stone pits
         if ((bx * 7 + c * 13) % 5 === 0) {
-          ctx.fillStyle = '#090d16';
+          ctx.fillStyle = '#100d14';
           ctx.fillRect(bx + 4, y + 4, 2, 1);
         }
       }
@@ -3397,7 +3510,7 @@ export class GameEngine {
         ctx.fillRect(bx, y, bw, 1);
         ctx.fillRect(bx, y, 1, brickH - 2);
 
-        ctx.fillStyle = '#050811';
+        ctx.fillStyle = '#16121a';
         ctx.fillRect(bx, y + brickH - 3, bw, 1);
         ctx.fillRect(bx + bw - 1, y, 1, brickH - 2);
       }
@@ -3410,7 +3523,7 @@ export class GameEngine {
       ctx.fillStyle = theme.wallBevel;
       ctx.fillRect(1, y + 1, WALL_THICKNESS - 3, 1);
       ctx.fillRect(1, y + 1, 1, 16);
-      ctx.fillStyle = '#050811';
+      ctx.fillStyle = '#16121a';
       ctx.fillRect(1, y + 16, WALL_THICKNESS - 3, 1);
       ctx.fillRect(WALL_THICKNESS - 3, y + 1, 1, 16);
     }
@@ -3422,146 +3535,134 @@ export class GameEngine {
       ctx.fillStyle = theme.wallBevel;
       ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS + 2, y + 1, WALL_THICKNESS - 3, 1);
       ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS + 2, y + 1, 1, 16);
-      ctx.fillStyle = '#050811';
+      ctx.fillStyle = '#16121a';
       ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS + 2, y + 16, WALL_THICKNESS - 3, 1);
       ctx.fillRect(ARENA_WIDTH - 2, y + 1, 1, 16);
     }
 
-    // 3. Wall Battlements & Parapet Merlons along Top Wall
-    for (let mx = WALL_THICKNESS; mx < ARENA_WIDTH - WALL_THICKNESS; mx += 36) {
-      ctx.fillStyle = '#090d16';
-      ctx.fillRect(mx + 2, 0, 18, 5);
+    // 4. ARCHED WOODEN DUNGEON DOORS (The Iconic Feature from Image 3)
+    const doorPositions = [220, ARENA_WIDTH - 220];
+    const doorW = 34;
+    const doorH = 40;
+
+    for (const dx of doorPositions) {
+      const topY = 2;
+      const botY = WALL_THICKNESS;
+
+      // Outer Arch Carved Stone Voussoirs
+      ctx.fillStyle = '#231d27';
+      ctx.fillRect(dx - 5, topY, doorW + 10, doorH + 2);
+
+      // Stone Arch Trim
       ctx.fillStyle = theme.wallBevel;
-      ctx.fillRect(mx + 3, 1, 16, 3);
-      ctx.fillStyle = theme.wallAccent;
-      ctx.fillRect(mx + 4, 1, 14, 1);
-    }
+      ctx.beginPath();
+      ctx.arc(dx + doorW / 2, topY + 16, 19, Math.PI, 0);
+      ctx.lineTo(dx + doorW + 2, botY);
+      ctx.lineTo(dx - 2, botY);
+      ctx.closePath();
+      ctx.fill();
 
-    // 4. Accent Gold/Bronze Trim along wall-floor boundary
-    ctx.fillStyle = theme.wallAccent;
-    ctx.fillRect(WALL_THICKNESS, WALL_THICKNESS - 2, ARENA_WIDTH - WALL_THICKNESS * 2, 2);
-    ctx.fillRect(WALL_THICKNESS, ARENA_HEIGHT - WALL_THICKNESS, ARENA_WIDTH - WALL_THICKNESS * 2, 2);
-    ctx.fillRect(WALL_THICKNESS - 2, WALL_THICKNESS, 2, ARENA_HEIGHT - WALL_THICKNESS * 2);
-    ctx.fillRect(ARENA_WIDTH - WALL_THICKNESS, WALL_THICKNESS, 2, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      // Deep Door Cavity (Inner Shadow)
+      ctx.fillStyle = '#0f0c13';
+      ctx.beginPath();
+      ctx.arc(dx + doorW / 2, topY + 16, 16, Math.PI, 0);
+      ctx.lineTo(dx + doorW - 1, botY);
+      ctx.lineTo(dx + 1, botY);
+      ctx.closePath();
+      ctx.fill();
 
-    // 5. Hanging Heavy Iron Dungeon Chains & Open Shackles
-    const chainPositions = [140, 360, cx - 320, cx + 320, ARENA_WIDTH - 360, ARENA_WIDTH - 140];
-    for (const chx of chainPositions) {
-      // Iron wall ring
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(chx - 3, 6, 6, 6);
-      ctx.fillStyle = '#475569';
-      ctx.fillRect(chx - 2, 7, 4, 4);
-      ctx.fillStyle = '#030712';
-      ctx.fillRect(chx - 1, 8, 2, 2);
+      // Aged Oak Wood Planks
+      ctx.fillStyle = '#452818';
+      ctx.fillRect(dx + 3, topY + 14, doorW - 6, botY - topY - 14);
+      ctx.beginPath();
+      ctx.arc(dx + doorW / 2, topY + 16, 14, Math.PI, 0);
+      ctx.fill();
 
-      // Alternating interlocking chain links
-      for (let l = 0; l < 4; l++) {
-        const ly = 12 + l * 5;
-        ctx.fillStyle = '#1e293b';
-        ctx.fillRect(chx - 1, ly, 3, 4);
-        ctx.fillStyle = '#64748b';
-        ctx.fillRect(chx, ly, 1, 3);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(chx, ly, 1, 1);
+      // Individual Vertical Wood Planks with Grain Lines
+      for (let p = dx + 7; p < dx + doorW - 4; p += 6) {
+        ctx.fillStyle = '#2b180d';
+        ctx.fillRect(p, topY + 8, 1, botY - topY - 8);
+        ctx.fillStyle = '#653a1f';
+        ctx.fillRect(p + 1, topY + 8, 1, botY - topY - 8);
       }
 
-      // Open Heavy Iron Shackle Cuff
-      const cuffY = 32;
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(chx - 4, cuffY, 8, 4);
-      ctx.fillStyle = '#64748b';
-      ctx.fillRect(chx - 3, cuffY + 1, 6, 2);
-      ctx.fillStyle = '#090d16';
-      ctx.fillRect(chx - 1, cuffY + 1, 2, 3);
+      // Wrought Iron Studs / Rivets
+      ctx.fillStyle = '#1c2128';
+      ctx.fillRect(dx + 5, topY + 18, 2, 2);
+      ctx.fillRect(dx + doorW - 7, topY + 18, 2, 2);
+      ctx.fillRect(dx + 5, botY - 10, 2, 2);
+      ctx.fillRect(dx + doorW - 7, botY - 10, 2, 2);
+
+      // Heavy Iron Pull Ring
+      const ringX = dx + doorW / 2;
+      const ringY = topY + 26;
+      ctx.fillStyle = '#1c2128';
+      ctx.fillRect(ringX - 2, ringY - 2, 4, 3);
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(ringX, ringY + 3, 4, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Chiseled Stone Threshold Doorstep Slab extending into arena floor
+      ctx.fillStyle = '#1c1820';
+      ctx.fillRect(dx - 4, botY - 1, doorW + 8, 5);
+      ctx.fillStyle = '#554958';
+      ctx.fillRect(dx - 3, botY, doorW + 6, 3);
+      ctx.fillStyle = '#7e7183';
+      ctx.fillRect(dx - 3, botY, doorW + 6, 1);
     }
 
-    // 6. Mounted Heraldic Heater Wall Shields (Between Banners)
-    const shieldPositions = [300, cx, ARENA_WIDTH - 300];
-    for (const sx of shieldPositions) {
-      // Shield mount bracket
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(sx - 2, 8, 4, 4);
+    // 5. RECESSED STONE WALL NICHES / ALCOVES (From Image 3)
+    const nichePositions = [cx - 150, cx + 150];
+    const nicheW = 20;
+    const nicheH = 26;
 
-      // Heater shield shape
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(sx - 7, 10, 14, 15);
+    for (const nx of nichePositions) {
+      const topY = copingH + 2;
+
+      // Carved stone surround
+      ctx.fillStyle = '#1c1820';
+      ctx.fillRect(nx - 2, topY - 1, nicheW + 4, nicheH + 2);
+      ctx.fillStyle = theme.wallBevel;
+      ctx.fillRect(nx - 1, topY, nicheW + 2, nicheH);
+
+      // Dark cavity interior
+      ctx.fillStyle = '#0f0c13';
+      ctx.fillRect(nx + 1, topY + 2, nicheW - 2, nicheH - 3);
+
+      // Arched top of niche
+      ctx.fillStyle = '#0f0c13';
       ctx.beginPath();
-      ctx.moveTo(sx - 7, 25);
-      ctx.lineTo(sx, 31);
-      ctx.lineTo(sx + 7, 25);
+      ctx.arc(nx + nicheW / 2, topY + 6, nicheW / 2 - 1, Math.PI, 0);
       ctx.fill();
 
-      // Shield heraldic field
-      ctx.fillStyle = theme.bannerColor;
-      ctx.fillRect(sx - 5, 12, 10, 12);
-      ctx.beginPath();
-      ctx.moveTo(sx - 5, 24);
-      ctx.lineTo(sx, 29);
-      ctx.lineTo(sx + 5, 24);
-      ctx.fill();
-
-      // Golden heraldic cross on shield
-      ctx.fillStyle = '#fbbf24';
-      ctx.fillRect(sx - 1, 13, 2, 13);
-      ctx.fillRect(sx - 4, 16, 8, 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(sx - 1, 16, 2, 2);
+      // Stone sill
+      ctx.fillStyle = '#554958';
+      ctx.fillRect(nx - 2, topY + nicheH - 2, nicheW + 4, 2);
+      ctx.fillStyle = '#7e7183';
+      ctx.fillRect(nx - 2, topY + nicheH - 2, nicheW + 4, 1);
     }
 
-    // 7. Hanging Royal Wall Banners on Top Wall
-    const bannerPositions = [200, 440, cx - 160, cx + 160, ARENA_WIDTH - 440, ARENA_WIDTH - 200];
-    for (const bx of bannerPositions) {
-      // Wood/Iron hanging rod with golden finials
-      ctx.fillStyle = '#64748b';
-      ctx.fillRect(bx - 14, 4, 28, 3);
-      ctx.fillStyle = '#fbbf24';
-      ctx.fillRect(bx - 16, 3, 3, 5);
-      ctx.fillRect(bx + 13, 3, 3, 5);
-
-      // Banner fabric
-      ctx.fillStyle = theme.bannerFabric;
-      ctx.fillRect(bx - 11, 7, 22, 22);
-      // Swallowtail V-cut at bottom
-      ctx.beginPath();
-      ctx.moveTo(bx - 11, 29);
-      ctx.lineTo(bx, 36);
-      ctx.lineTo(bx + 11, 29);
-      ctx.lineTo(bx + 11, 7);
-      ctx.lineTo(bx - 11, 7);
-      ctx.fill();
-
-      // Gold fringe trim & emblem
-      ctx.fillStyle = theme.bannerTrim;
-      ctx.fillRect(bx - 9, 9, 18, 2);
-      ctx.fillRect(bx - 2, 14, 4, 8);
-      ctx.fillRect(bx - 5, 17, 10, 2);
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(bx - 1, 17, 2, 2);
-    }
-
-    // 8. Hand-Forged Gothic Wrought Iron Torches
+    // 6. Wall Torches with Animated Pixel Flame (From Image 3)
     for (const torch of this.torches) {
-      // Forged Iron Wall Mounting Plate
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(torch.x - 3, torch.y - 4, 6, 9);
-      ctx.fillStyle = '#475569';
-      ctx.fillRect(torch.x - 2, torch.y - 3, 4, 7);
-      // Copper mounting rivets
-      ctx.fillStyle = '#ca8a04';
-      ctx.fillRect(torch.x - 2, torch.y - 3, 1, 1);
-      ctx.fillRect(torch.x + 1, torch.y - 3, 1, 1);
-      ctx.fillRect(torch.x - 2, torch.y + 2, 1, 1);
-      ctx.fillRect(torch.x + 1, torch.y + 2, 1, 1);
+      // Forged Iron Wall Mounting Bracket
+      ctx.fillStyle = '#151b22';
+      ctx.fillRect(torch.x - 3, torch.y - 4, 6, 8);
+      ctx.fillStyle = '#384252';
+      ctx.fillRect(torch.x - 2, torch.y - 3, 4, 6);
+      // Golden mounting rivet
+      ctx.fillStyle = '#d97706';
+      ctx.fillRect(torch.x - 1, torch.y - 2, 2, 2);
 
-      // Curled wrought iron arm extending upward
-      ctx.fillStyle = '#1e293b';
+      // Sconce Arm extending up
+      ctx.fillStyle = '#1c2430';
       ctx.fillRect(torch.x - 4, torch.y - 6, 8, 3);
       ctx.fillRect(torch.x - 3, torch.y - 8, 6, 3);
 
       // Animated 4-Frame Pixel Flame
       const fShift = Math.sin(performance.now() * 0.015 + torch.x) * 1.5;
-      // Outer intense red/orange flame tongue
+      // Outer flame tongue
       ctx.fillStyle = '#ea580c';
       ctx.fillRect(torch.x - 4 + fShift * 0.5, torch.y - 14, 8, 7);
       ctx.fillRect(torch.x - 2 + fShift, torch.y - 17, 4, 4);

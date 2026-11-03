@@ -16,7 +16,7 @@ export default function App() {
   const [upgrades, setUpgrades] = useState<UpgradeOption[]>([]);
   const [crtShader, setCrtShader] = useState<boolean>(false);
   const [lang, setLang] = useState<'tr' | 'en'>('en');
-  const [screenMode, setScreenMode] = useState<'fit' | 'fill'>('fit');
+  const [screenMode, setScreenMode] = useState<'fit' | 'fill'>('fill');
   
   // Mobile controls are enabled by default so buttons are always accessible on both mobile & desktop
   const [showMobileControls, setShowMobileControls] = useState<boolean>(true);

@@ -847,216 +847,204 @@ export class SpriteRenderer {
   }
 
   private bakeAllFloorTiles() {
-    // 64x64 Multi-Stone Authentic Pixel Art Layout
-    const slabs = [
-      { x: 1, y: 1, w: 29, h: 18 },
-      { x: 32, y: 1, w: 31, h: 18 },
-      { x: 1, y: 21, w: 19, h: 22 },
-      { x: 22, y: 21, w: 21, h: 22 },
-      { x: 45, y: 21, w: 18, h: 22 },
-      { x: 1, y: 45, w: 27, h: 18 },
-      { x: 30, y: 45, w: 33, h: 18 },
-    ];
-
-    // Helper to render authentic pixel art beveled stone pavers
-    const drawStoneSlabs = (
+    // Helper to render authentic Jonik9i 16-bit Octagonal Stone Pavers with Diamond Insets (Image 3)
+    const drawOctagonalDungeonFloor = (
       ctx: CanvasRenderingContext2D,
-      bg: string,
-      baseColor: string,
-      surfaceColor: string,
-      hiColor: string,
-      darkColor: string,
-      moss1: string,
-      moss2: string
+      mortarColor: string,
+      stoneBase: string,
+      stoneSurface: string,
+      highlightColor: string,
+      shadowColor: string,
+      diamondColor: string,
+      diamondHighlight: string
     ) => {
-      ctx.fillStyle = bg;
+      // 1. Mortar Base
+      ctx.fillStyle = mortarColor;
       ctx.fillRect(0, 0, 64, 64);
 
-      for (const s of slabs) {
-        // Deep shadow base
-        ctx.fillStyle = darkColor;
-        ctx.fillRect(s.x, s.y, s.w, s.h);
+      // Four 32x32 Octagonal Stone Paver Centers: (16, 16), (48, 16), (16, 48), (48, 48)
+      const centers = [
+        { cx: 16, cy: 16 },
+        { cx: 48, cy: 16 },
+        { cx: 16, cy: 48 },
+        { cx: 48, cy: 48 },
+      ];
 
-        // Stone body
-        ctx.fillStyle = baseColor;
-        ctx.fillRect(s.x + 1, s.y + 1, s.w - 2, s.h - 2);
+      for (const { cx, cy } of centers) {
+        const r = 13; // radius
+        const c = 4;  // corner chamfer
 
-        // Surface texture
-        ctx.fillStyle = surfaceColor;
-        ctx.fillRect(s.x + 2, s.y + 2, s.w - 4, s.h - 4);
+        // Draw Octagon Base (Shadow outline)
+        ctx.fillStyle = shadowColor;
+        ctx.beginPath();
+        ctx.moveTo(cx - r + c, cy - r);
+        ctx.lineTo(cx + r - c, cy - r);
+        ctx.lineTo(cx + r, cy - r + c);
+        ctx.lineTo(cx + r, cy + r - c);
+        ctx.lineTo(cx + r - c, cy + r);
+        ctx.lineTo(cx - r + c, cy + r);
+        ctx.lineTo(cx - r, cy + r - c);
+        ctx.lineTo(cx - r, cy - r + c);
+        ctx.closePath();
+        ctx.fill();
 
-        // 3D Top/Left Chiseled Highlight
-        ctx.fillStyle = hiColor;
-        ctx.fillRect(s.x + 1, s.y + 1, s.w - 2, 1);
-        ctx.fillRect(s.x + 1, s.y + 1, 1, s.h - 2);
+        // Inner Octagon Stone Body
+        ctx.fillStyle = stoneBase;
+        ctx.beginPath();
+        ctx.moveTo(cx - r + c + 1, cy - r + 1);
+        ctx.lineTo(cx + r - c - 1, cy - r + 1);
+        ctx.lineTo(cx + r - 1, cy - r + c + 1);
+        ctx.lineTo(cx + r - 1, cy + r - c - 1);
+        ctx.lineTo(cx + r - c - 1, cy + r - 1);
+        ctx.lineTo(cx - r + c + 1, cy + r - 1);
+        ctx.lineTo(cx - r + 1, cy + r - c - 1);
+        ctx.lineTo(cx - r + 1, cy - r + c + 1);
+        ctx.closePath();
+        ctx.fill();
 
-        // 3D Bottom/Right Mortar Shadow
-        ctx.fillStyle = darkColor;
-        ctx.fillRect(s.x + 1, s.y + s.h - 2, s.w - 2, 1);
-        ctx.fillRect(s.x + s.w - 2, s.y + 1, 1, s.h - 2);
+        // Octagon Surface Face
+        ctx.fillStyle = stoneSurface;
+        ctx.beginPath();
+        ctx.moveTo(cx - r + c + 2, cy - r + 2);
+        ctx.lineTo(cx + r - c - 2, cy - r + 2);
+        ctx.lineTo(cx + r - 2, cy - r + c + 2);
+        ctx.lineTo(cx + r - 2, cy + r - c - 2);
+        ctx.lineTo(cx + r - c - 2, cy + r - 2);
+        ctx.lineTo(cx - r + c + 2, cy + r - 2);
+        ctx.lineTo(cx - r + 2, cy + r - c - 2);
+        ctx.lineTo(cx - r + 2, cy - r + c + 2);
+        ctx.closePath();
+        ctx.fill();
 
-        // Chiseled surface pits
-        ctx.fillStyle = darkColor;
-        ctx.fillRect(s.x + 5, s.y + 5, 2, 1);
-        ctx.fillRect(s.x + s.w - 6, s.y + s.h - 6, 2, 1);
-        ctx.fillStyle = hiColor;
-        ctx.fillRect(s.x + 7, s.y + 5, 1, 1);
+        // 3D Top and Left Bevel Highlights
+        ctx.fillStyle = highlightColor;
+        ctx.fillRect(cx - r + c, cy - r + 1, (r - c) * 2, 1);
+        ctx.fillRect(cx - r + 1, cy - r + c, 1, (r - c) * 2);
+        ctx.fillRect(cx - r + 2, cy - r + 2, 2, 2);
+
+        // Chiseled surface pits and stone grain
+        ctx.fillStyle = shadowColor;
+        ctx.fillRect(cx - 5, cy - 4, 2, 1);
+        ctx.fillRect(cx + 4, cy + 3, 2, 1);
+        ctx.fillStyle = highlightColor;
+        ctx.fillRect(cx - 3, cy - 4, 1, 1);
       }
 
-      // Authentic moss & crevice weeds
-      ctx.fillStyle = moss1;
-      ctx.fillRect(30, 16, 3, 3);
-      ctx.fillRect(20, 20, 3, 2);
-      ctx.fillRect(43, 42, 3, 3);
-      ctx.fillRect(28, 44, 3, 2);
-      ctx.fillStyle = moss2;
-      ctx.fillRect(31, 17, 1, 1);
-      ctx.fillRect(21, 21, 1, 1);
-      ctx.fillRect(44, 43, 1, 1);
+      // 2. Diamond Corner Insets (Where 4 octagons converge)
+      const diamondPositions = [
+        { x: 32, y: 32 },
+        { x: 0, y: 32 },
+        { x: 64, y: 32 },
+        { x: 32, y: 0 },
+        { x: 32, y: 64 },
+        { x: 0, y: 0 },
+        { x: 64, y: 0 },
+        { x: 0, y: 64 },
+        { x: 64, y: 64 },
+      ];
+
+      for (const { x, y } of diamondPositions) {
+        ctx.fillStyle = shadowColor;
+        ctx.fillRect(x - 4, y - 4, 8, 8);
+        ctx.fillStyle = diamondColor;
+        ctx.fillRect(x - 3, y - 3, 6, 6);
+        ctx.fillStyle = diamondHighlight;
+        ctx.fillRect(x - 2, y - 2, 2, 2);
+      }
     };
 
-    // 1. CATACOMBS - Weathered Ancient Slate, Emerald Moss & Chiseled Runes
+    // 1. CATACOMBS - Moody 16-bit Slate Octagonal Pavers (Jonik9i Masterpiece Palette)
     {
       const [canvas, ctx] = this.createOffscreen(64, 64);
-      drawStoneSlabs(
+      drawOctagonalDungeonFloor(
         ctx,
-        '#030712', // deep black mortar
-        '#1e293b', // slate shadow
-        '#334155', // slate surface
-        '#64748b', // crisp stone highlight
-        '#090d16', // shadow bevel
-        '#047857', // moss deep
-        '#10b981'  // moss bright
+        '#141117', // deep mortar
+        '#27222a', // dark border stone
+        '#3a3340', // slate paver face
+        '#605567', // chiseled rim highlight
+        '#1e1a22', // deep bevel shadow
+        '#29232c', // diamond inset
+        '#4d4253'  // diamond highlight
       );
 
-      // Cracked stone fissure details
-      ctx.fillStyle = '#090d16';
-      ctx.fillRect(12, 6, 1, 4);
-      ctx.fillRect(13, 10, 1, 4);
-      ctx.fillRect(38, 28, 4, 1);
-      ctx.fillRect(42, 29, 3, 1);
-
-      // Chiseled ancient floor rune on central slab
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(28, 28, 8, 8);
-      ctx.fillStyle = '#059669';
-      ctx.fillRect(30, 30, 4, 4);
-      ctx.fillStyle = '#34d399';
-      ctx.fillRect(31, 31, 2, 2);
+      // Fine stone hairline cracks
+      ctx.fillStyle = '#1e1a22';
+      ctx.fillRect(18, 12, 1, 4);
+      ctx.fillRect(19, 16, 2, 1);
+      ctx.fillRect(44, 46, 3, 1);
+      ctx.fillRect(47, 47, 1, 3);
 
       this.cache.set('floor_catacombs', canvas);
       this.cache.set('floor_tile', canvas);
     }
 
-    // 2. MAGMA FORGE - Scorched Basalt, Molten Seams & Glowing Magma Veins
+    // 2. MAGMA FORGE - Deep Basalt Octagonal Pavers with Glowing Fissures
     {
       const [canvas, ctx] = this.createOffscreen(64, 64);
-      drawStoneSlabs(
+      drawOctagonalDungeonFloor(
         ctx,
-        '#450a0a', // glowing scorched mortar
-        '#18181b', // basalt black
-        '#27272a', // dark basalt face
-        '#52525b', // basalt rim highlight
-        '#09090b', // deep soot
-        '#7c2d12', // scorched crust
-        '#b45309'  // glowing ember dust
+        '#2b0d0d', // dark scorch mortar
+        '#181519', // basalt paver
+        '#272229', // dark stone face
+        '#4a3f4e', // stone highlight
+        '#0f0c10', // shadow
+        '#7f1d1d', // heated diamond inset
+        '#ea580c'  // orange magma glint
       );
-
-      // Molten Lava Seams in mortar gaps
-      ctx.fillStyle = '#dc2626';
-      ctx.fillRect(0, 19, 64, 2);
-      ctx.fillRect(0, 43, 64, 2);
-      ctx.fillRect(20, 20, 2, 24);
-      ctx.fillRect(43, 20, 2, 24);
-
-      // Intense yellow-orange magma cores
-      ctx.fillStyle = '#f97316';
-      ctx.fillRect(8, 19, 14, 1);
-      ctx.fillRect(36, 19, 18, 1);
-      ctx.fillRect(14, 43, 22, 1);
+      // Small magma veins in corner seams
+      ctx.fillStyle = '#ea580c';
+      ctx.fillRect(31, 30, 2, 4);
+      ctx.fillRect(30, 31, 4, 2);
       ctx.fillStyle = '#fde047';
-      ctx.fillRect(14, 19, 4, 1);
-      ctx.fillRect(44, 19, 5, 1);
-      ctx.fillRect(24, 43, 6, 1);
-
+      ctx.fillRect(31, 31, 2, 2);
       this.cache.set('floor_magma', canvas);
     }
 
-    // 3. SUNKEN CRYPT - Drowned Jade Flagstones, Teal Algae & Water Ripples
+    // 3. SUNKEN CRYPT - Drowned Aquamarine Slate (Atmospheric, not garish)
     {
       const [canvas, ctx] = this.createOffscreen(64, 64);
-      drawStoneSlabs(
+      drawOctagonalDungeonFloor(
         ctx,
-        '#022c22', // deep water trench
-        '#115e59', // jade body
-        '#134e4a', // submerged face
-        '#2dd4bf', // shimmering wet highlight
-        '#042f2e', // water shadow
-        '#0f766e', // aquatic algae
-        '#5eead4'  // water droplet glint
+        '#0c1417', // dark deep water mortar
+        '#142429', // dark submerged slate
+        '#1e363d', // aged teal stone face
+        '#385a63', // wet stone highlight
+        '#0e1b1f', // shadow
+        '#122b30', // dark diamond
+        '#4d828e'  // water droplet glint
       );
-
-      // Water sheen ripple glints
-      ctx.fillStyle = '#67e8f9';
-      ctx.fillRect(10, 8, 3, 1);
-      ctx.fillRect(42, 10, 4, 1);
-      ctx.fillRect(26, 32, 3, 1);
-      ctx.fillRect(50, 52, 4, 1);
-
       this.cache.set('floor_sunken', canvas);
     }
 
-    // 4. OBSIDIAN SANCTUM - Polished Violet Marble, Golden Grout & Crystal Glints
+    // 4. OBSIDIAN SANCTUM - Royal Amethyst Dark Stone
     {
       const [canvas, ctx] = this.createOffscreen(64, 64);
-      drawStoneSlabs(
+      drawOctagonalDungeonFloor(
         ctx,
-        '#1e1b4b', // royal indigo mortar
-        '#2e1065', // violet marble body
-        '#3b0764', // polished face
-        '#7c3aed', // purple edge glow
-        '#090514', // deep obsidian
-        '#ca8a04', // golden filigree inlay
-        '#facc15'  // gold sparkle
+        '#120c1a', // void mortar
+        '#221630', // deep violet stone
+        '#332247', // amethyst paver face
+        '#563b75', // purple edge glow
+        '#170e22', // shadow
+        '#29193d', // diamond
+        '#7853a3'  // highlight
       );
-
-      // Gilded corner florets
-      ctx.fillStyle = '#f59e0b';
-      ctx.fillRect(30, 19, 3, 3);
-      ctx.fillRect(20, 43, 3, 3);
-      ctx.fillRect(43, 43, 3, 3);
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(31, 20, 1, 1);
-
       this.cache.set('floor_obsidian', canvas);
     }
 
-    // 5. ROYAL CITADEL - Imperial Fortress Paving, Red Heraldic Borders & Gold Studs
+    // 5. ROYAL CITADEL - Imperial Fortress Dark Granite
     {
       const [canvas, ctx] = this.createOffscreen(64, 64);
-      drawStoneSlabs(
+      drawOctagonalDungeonFloor(
         ctx,
-        '#1c1917', // heavy soot mortar
-        '#292524', // granite slab
-        '#44403c', // fortress stone
-        '#78716c', // polished stone rim
-        '#0c0a09', // granite shadow
-        '#991b1b', // crimson heraldic wash
-        '#f59e0b'  // bronze floor bolt
+        '#1a1617', // dark mortar
+        '#2b2526', // granite body
+        '#3d3436', // fortress slab
+        '#5c4f52', // rim highlight
+        '#1e191a', // shadow
+        '#4a151b', // crimson diamond
+        '#7f1d1d'  // highlight
       );
-
-      // Red royal floor borders & bronze studs
-      ctx.fillStyle = '#7f1d1d';
-      ctx.fillRect(0, 19, 64, 2);
-      ctx.fillRect(0, 43, 64, 2);
-      ctx.fillStyle = '#f59e0b';
-      ctx.fillRect(21, 20, 2, 2);
-      ctx.fillRect(44, 20, 2, 2);
-      ctx.fillRect(29, 44, 2, 2);
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(21, 20, 1, 1);
-      ctx.fillRect(44, 20, 1, 1);
-
       this.cache.set('floor_citadel', canvas);
     }
   }
@@ -1154,6 +1142,99 @@ export class SpriteRenderer {
       ctx.fillRect(6, 6, 1, 2);
       ctx.fillRect(9, 6, 1, 2);
       this.cache.set('skull_pile', canvas);
+    }
+
+    // 6. Dungeon Oak Barrel with Iron Bands (Matching Image 3)
+    {
+      const [canvas, ctx] = this.createOffscreen(18, 22);
+      ctx.fillStyle = '#1c1917';
+      ctx.fillRect(3, 1, 12, 20);
+      ctx.fillRect(1, 4, 16, 14);
+
+      ctx.fillStyle = '#452818';
+      ctx.fillRect(2, 3, 14, 16);
+      ctx.fillStyle = '#6a4227';
+      ctx.fillRect(3, 4, 12, 14);
+      ctx.fillStyle = '#8c5835';
+      ctx.fillRect(4, 5, 4, 12);
+
+      ctx.fillStyle = '#321d10';
+      ctx.fillRect(4, 2, 10, 2);
+      ctx.fillStyle = '#6a4227';
+      ctx.fillRect(5, 2, 8, 1);
+
+      ctx.fillStyle = '#1e242d';
+      ctx.fillRect(1, 6, 16, 3);
+      ctx.fillRect(1, 14, 16, 3);
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(2, 6, 14, 1);
+      ctx.fillRect(2, 14, 14, 1);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(4, 7, 1, 1);
+      ctx.fillRect(9, 7, 1, 1);
+      ctx.fillRect(13, 7, 1, 1);
+      ctx.fillRect(4, 15, 1, 1);
+      ctx.fillRect(9, 15, 1, 1);
+      ctx.fillRect(13, 15, 1, 1);
+      this.cache.set('barrel', canvas);
+    }
+
+    // 7. Fallen Wooden Beams & Planks (Matching Image 3)
+    {
+      const [canvas, ctx] = this.createOffscreen(26, 16);
+      ctx.fillStyle = '#1c1917';
+      ctx.fillRect(2, 6, 22, 6);
+      ctx.fillStyle = '#452818';
+      ctx.fillRect(3, 7, 20, 4);
+      ctx.fillStyle = '#6a4227';
+      ctx.fillRect(4, 7, 18, 2);
+
+      ctx.fillStyle = '#1c1917';
+      ctx.fillRect(6, 2, 14, 5);
+      ctx.fillStyle = '#54331d';
+      ctx.fillRect(7, 3, 12, 3);
+      ctx.fillStyle = '#7a4b2c';
+      ctx.fillRect(8, 3, 10, 1);
+
+      ctx.fillStyle = '#8c5835';
+      ctx.fillRect(1, 10, 3, 2);
+      ctx.fillRect(22, 5, 3, 2);
+      ctx.fillRect(15, 12, 4, 2);
+      this.cache.set('planks', canvas);
+    }
+
+    // 8. Pile of Stone Masonry Rubble & Gravel (Matching Image 3)
+    {
+      const [canvas, ctx] = this.createOffscreen(24, 16);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.beginPath();
+      ctx.ellipse(12, 12, 11, 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#1c1820';
+      ctx.fillRect(5, 5, 12, 8);
+      ctx.fillStyle = '#38303d';
+      ctx.fillRect(6, 6, 10, 6);
+      ctx.fillStyle = '#554958';
+      ctx.fillRect(7, 6, 8, 3);
+      ctx.fillStyle = '#7e7183';
+      ctx.fillRect(8, 6, 4, 1);
+
+      ctx.fillStyle = '#272229';
+      ctx.fillRect(2, 8, 6, 5);
+      ctx.fillStyle = '#4b414e';
+      ctx.fillRect(3, 9, 4, 3);
+
+      ctx.fillStyle = '#272229';
+      ctx.fillRect(15, 7, 7, 6);
+      ctx.fillStyle = '#554958';
+      ctx.fillRect(16, 8, 5, 4);
+
+      ctx.fillStyle = '#7e7183';
+      ctx.fillRect(1, 12, 2, 2);
+      ctx.fillRect(9, 13, 2, 2);
+      ctx.fillRect(21, 12, 2, 2);
+      this.cache.set('rubble', canvas);
     }
   }
 
@@ -1499,7 +1580,7 @@ export class SpriteRenderer {
     ctx.restore();
   }
 
-  public drawProp(ctx: CanvasRenderingContext2D, type: 'pot' | 'chest' | 'crate' | 'urn' | 'crystal' | 'anvil' | 'skull_pile', x: number, y: number, isOpen: boolean = false) {
+  public drawProp(ctx: CanvasRenderingContext2D, type: 'pot' | 'chest' | 'crate' | 'urn' | 'crystal' | 'anvil' | 'skull_pile' | 'barrel' | 'planks' | 'rubble', x: number, y: number, isOpen: boolean = false) {
     const key = type === 'chest' ? `chest_${isOpen ? 'open' : 'closed'}` : type;
     const img = this.cache.get(key);
     if (!img) return;

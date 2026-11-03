@@ -137,7 +137,7 @@ export interface BreakableProp {
   width: number;
   height: number;
   hp: number;
-  type: 'pot' | 'crate' | 'chest' | 'urn' | 'crystal' | 'anvil' | 'skull_pile';
+  type: 'pot' | 'crate' | 'chest' | 'urn' | 'crystal' | 'anvil' | 'skull_pile' | 'barrel' | 'planks' | 'rubble';
   opened?: boolean;
 }
 
