@@ -25,9 +25,11 @@ import {
 import { audio } from './audio';
 import { spriteRenderer } from './sprites';
 
-export const ARENA_WIDTH = 760;
-export const ARENA_HEIGHT = 540;
-export const WALL_THICKNESS = 32;
+export const VIEW_WIDTH = 760;
+export const VIEW_HEIGHT = 500;
+export const ARENA_WIDTH = 1440;
+export const ARENA_HEIGHT = 960;
+export const WALL_THICKNESS = 36;
 
 export interface DungeonThemeConfig {
   id: DungeonBiomeId;
@@ -525,69 +527,58 @@ export class GameEngine {
 
   private setupArenaProps() {
     const theme = this.currentBiome;
-    if (theme === 'catacombs') {
-      this.props = [
-        { id: 'prop_1', x: 80, y: 80, width: 16, height: 16, hp: 1, type: 'pot' },
-        { id: 'prop_2', x: 105, y: 80, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'prop_3', x: ARENA_WIDTH - 80, y: 80, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'prop_4', x: ARENA_WIDTH - 105, y: 80, width: 16, height: 16, hp: 1, type: 'pot' },
-        { id: 'prop_5', x: 85, y: ARENA_HEIGHT - 85, width: 16, height: 16, hp: 1, type: 'skull_pile' },
-        { id: 'prop_6', x: ARENA_WIDTH - 85, y: ARENA_HEIGHT - 85, width: 16, height: 16, hp: 1, type: 'skull_pile' },
-        { id: 'chest_1', x: ARENA_WIDTH / 2, y: 72, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
-      ];
-    } else if (theme === 'magma') {
-      this.props = [
-        { id: 'prop_1', x: 85, y: 85, width: 20, height: 16, hp: 1, type: 'anvil' },
-        { id: 'prop_2', x: 115, y: 85, width: 18, height: 18, hp: 1, type: 'crate' },
-        { id: 'prop_3', x: ARENA_WIDTH - 85, y: 85, width: 20, height: 16, hp: 1, type: 'anvil' },
-        { id: 'prop_4', x: ARENA_WIDTH - 115, y: 85, width: 18, height: 18, hp: 1, type: 'crate' },
-        { id: 'prop_5', x: 90, y: ARENA_HEIGHT - 85, width: 16, height: 16, hp: 1, type: 'skull_pile' },
-        { id: 'prop_6', x: ARENA_WIDTH - 90, y: ARENA_HEIGHT - 85, width: 18, height: 18, hp: 1, type: 'crate' },
-        { id: 'chest_1', x: ARENA_WIDTH / 2, y: 72, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
-      ];
-    } else if (theme === 'sunken') {
-      this.props = [
-        { id: 'prop_1', x: 80, y: 80, width: 18, height: 18, hp: 1, type: 'crystal' },
-        { id: 'prop_2', x: 110, y: 80, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'prop_3', x: ARENA_WIDTH - 80, y: 80, width: 18, height: 18, hp: 1, type: 'crystal' },
-        { id: 'prop_4', x: ARENA_WIDTH - 110, y: 80, width: 18, height: 18, hp: 1, type: 'crystal' },
-        { id: 'prop_5', x: 85, y: ARENA_HEIGHT - 85, width: 18, height: 18, hp: 1, type: 'crystal' },
-        { id: 'prop_6', x: ARENA_WIDTH - 85, y: ARENA_HEIGHT - 85, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'chest_1', x: ARENA_WIDTH / 2, y: 72, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
-      ];
-    } else if (theme === 'obsidian') {
-      this.props = [
-        { id: 'prop_1', x: 85, y: 85, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'prop_2', x: 115, y: 85, width: 18, height: 18, hp: 1, type: 'crystal' },
-        { id: 'prop_3', x: ARENA_WIDTH - 85, y: 85, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'prop_4', x: ARENA_WIDTH - 115, y: 85, width: 18, height: 18, hp: 1, type: 'crystal' },
-        { id: 'prop_5', x: 90, y: ARENA_HEIGHT - 85, width: 18, height: 18, hp: 1, type: 'crate' },
-        { id: 'prop_6', x: ARENA_WIDTH - 90, y: ARENA_HEIGHT - 85, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'chest_1', x: ARENA_WIDTH / 2, y: 72, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
-      ];
-    } else {
-      // citadel
-      this.props = [
-        { id: 'prop_1', x: 85, y: 85, width: 18, height: 18, hp: 1, type: 'crate' },
-        { id: 'prop_2', x: 115, y: 85, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'prop_3', x: ARENA_WIDTH - 85, y: 85, width: 18, height: 18, hp: 1, type: 'crate' },
-        { id: 'prop_4', x: ARENA_WIDTH - 115, y: 85, width: 16, height: 18, hp: 1, type: 'urn' },
-        { id: 'prop_5', x: 90, y: ARENA_HEIGHT - 85, width: 16, height: 16, hp: 1, type: 'skull_pile' },
-        { id: 'prop_6', x: ARENA_WIDTH - 90, y: ARENA_HEIGHT - 85, width: 16, height: 16, hp: 1, type: 'skull_pile' },
-        { id: 'chest_1', x: ARENA_WIDTH / 2, y: 72, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
-      ];
-    }
+    const cx = ARENA_WIDTH / 2;
+    const cy = ARENA_HEIGHT / 2;
+
+    this.props = [
+      // Central sanctum chests & urns
+      { id: 'chest_1', x: cx, y: 120, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
+      { id: 'chest_2', x: cx, y: ARENA_HEIGHT - 120, width: 20, height: 18, hp: 1, type: 'chest', opened: false },
+
+      // West Crypts (Pots, Urns, Skull piles)
+      { id: 'prop_w1', x: 120, y: 160, width: 16, height: 16, hp: 1, type: 'pot' },
+      { id: 'prop_w2', x: 160, y: 160, width: 16, height: 18, hp: 1, type: 'urn' },
+      { id: 'prop_w3', x: 140, y: cy, width: 16, height: 16, hp: 1, type: 'skull_pile' },
+      { id: 'prop_w4', x: 120, y: ARENA_HEIGHT - 160, width: 16, height: 18, hp: 1, type: 'urn' },
+      { id: 'prop_w5', x: 160, y: ARENA_HEIGHT - 160, width: 16, height: 16, hp: 1, type: 'pot' },
+
+      // East Armory & Forge (Anvils, Crates, Crystals)
+      { id: 'prop_e1', x: ARENA_WIDTH - 160, y: 160, width: 20, height: 16, hp: 1, type: 'anvil' },
+      { id: 'prop_e2', x: ARENA_WIDTH - 120, y: 160, width: 18, height: 18, hp: 1, type: 'crate' },
+      { id: 'prop_e3', x: ARENA_WIDTH - 140, y: cy, width: 18, height: 18, hp: 1, type: 'crystal' },
+      { id: 'prop_e4', x: ARENA_WIDTH - 160, y: ARENA_HEIGHT - 160, width: 18, height: 18, hp: 1, type: 'crate' },
+      { id: 'prop_e5', x: ARENA_WIDTH - 120, y: ARENA_HEIGHT - 160, width: 20, height: 16, hp: 1, type: 'anvil' },
+
+      // North Hall decorative pots
+      { id: 'prop_n1', x: cx - 220, y: 110, width: 16, height: 18, hp: 1, type: 'urn' },
+      { id: 'prop_n2', x: cx + 220, y: 110, width: 16, height: 18, hp: 1, type: 'urn' },
+
+      // South Bastion crates
+      { id: 'prop_s1', x: cx - 220, y: ARENA_HEIGHT - 110, width: 18, height: 18, hp: 1, type: 'crate' },
+      { id: 'prop_s2', x: cx + 220, y: ARENA_HEIGHT - 110, width: 18, height: 18, hp: 1, type: 'crate' },
+    ];
   }
 
   private setupTorches() {
     const flame = this.currentTheme?.torchFlame || '#f59e0b';
     this.torches = [
-      { x: 180, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - 180, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
-      { x: WALL_THICKNESS + 8, y: ARENA_HEIGHT / 2, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - WALL_THICKNESS - 8, y: ARENA_HEIGHT / 2, flicker: 0, color: flame },
-      { x: 240, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
-      { x: ARENA_WIDTH - 240, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
+      // Top wall (4 torches)
+      { x: 260, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
+      { x: 540, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - 540, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - 260, y: WALL_THICKNESS + 8, flicker: 0, color: flame },
+
+      // Bottom wall (4 torches)
+      { x: 260, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
+      { x: 540, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - 540, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - 260, y: ARENA_HEIGHT - WALL_THICKNESS - 8, flicker: 0, color: flame },
+
+      // Left & Right walls (4 torches)
+      { x: WALL_THICKNESS + 8, y: 320, flicker: 0, color: flame },
+      { x: WALL_THICKNESS + 8, y: ARENA_HEIGHT - 320, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - WALL_THICKNESS - 8, y: 320, flicker: 0, color: flame },
+      { x: ARENA_WIDTH - WALL_THICKNESS - 8, y: ARENA_HEIGHT - 320, flicker: 0, color: flame },
     ];
   }
 
@@ -928,7 +919,7 @@ export class GameEngine {
         };
       }
       case 'BOSS_GOLEM': {
-        const bossHp = Math.round(450 + w * 95 + Math.max(0, w - 5) * 60);
+        const bossHp = Math.round(300 + w * 25);
         return {
           id,
           type,
@@ -940,16 +931,16 @@ export class GameEngine {
           height: 52,
           hp: bossHp,
           maxHp: bossHp,
-          speed: Math.min(85, 56 + w * 2),
-          damage: 2 + dmgBonus,
+          speed: Math.min(80, 52 + w * 2),
+          damage: 1,
           facing: 'left',
           state: 'chase',
           stateTimer: 0,
           telegraphTimer: 0,
-          telegraphMax: 0.75,
+          telegraphMax: 0.85,
           targetX: 0,
           targetY: 0,
-          attackCooldown: 1.2,
+          attackCooldown: 1.5,
           flashTimer: 0,
           scaleX: 1,
           scaleY: 1,
@@ -1129,40 +1120,40 @@ export class GameEngine {
     // Dynamic Mobile Camera (Smooth player tracking + arena boundary clamping)
     let targetCamX = ARENA_WIDTH / 2;
     let targetCamY = ARENA_HEIGHT / 2;
-    let targetZ = 1.38;
+    let targetZ = 1.15;
 
     if (this.state === 'PLAYING' || this.state === 'UPGRADE') {
-      const leadX = this.player.facing === 'right' ? 24 : -24;
+      const leadX = this.player.facing === 'right' ? 28 : -28;
       targetCamX = this.player.x + leadX;
       targetCamY = this.player.y;
 
       if (this.player.isDashing) {
-        targetZ = 1.30;
+        targetZ = 1.08;
       } else if (this.enemies.some(e => e.isBoss)) {
-        targetZ = 1.25;
+        targetZ = 1.05; // wide cinematic view for boss fight!
       } else {
-        targetZ = 1.38;
+        targetZ = 1.18;
       }
     } else if (this.state === 'TITLE') {
       targetCamX = ARENA_WIDTH / 2;
       targetCamY = ARENA_HEIGHT / 2;
-      targetZ = 1.05;
+      targetZ = 0.88;
     } else if (this.state === 'GAMEOVER' || this.state === 'VICTORY') {
       targetCamX = this.player.x;
       targetCamY = this.player.y;
-      targetZ = 1.45;
+      targetZ = 1.25;
     }
 
     this.targetZoom = targetZ;
     this.cameraZoom += (this.targetZoom - this.cameraZoom) * Math.min(1.0, dt * 5.0);
 
-    const halfViewW = (ARENA_WIDTH / 2) / this.cameraZoom;
-    const halfViewH = (ARENA_HEIGHT / 2) / this.cameraZoom;
+    const halfViewW = (VIEW_WIDTH / 2) / this.cameraZoom;
+    const halfViewH = (VIEW_HEIGHT / 2) / this.cameraZoom;
 
-    const minX = halfViewW;
-    const maxX = ARENA_WIDTH - halfViewW;
-    const minY = halfViewH;
-    const maxY = ARENA_HEIGHT - halfViewH;
+    const minX = halfViewW + WALL_THICKNESS;
+    const maxX = ARENA_WIDTH - halfViewW - WALL_THICKNESS;
+    const minY = halfViewH + WALL_THICKNESS;
+    const maxY = ARENA_HEIGHT - halfViewH - WALL_THICKNESS;
 
     const clampedX = minX < maxX ? Math.max(minX, Math.min(maxX, targetCamX)) : ARENA_WIDTH / 2;
     const clampedY = minY < maxY ? Math.max(minY, Math.min(maxY, targetCamY)) : ARENA_HEIGHT / 2;
@@ -1671,6 +1662,14 @@ export class GameEngine {
       // Cooldown timer
       if (e.attackCooldown > 0) e.attackCooldown -= dt;
 
+      // Advance animation frames
+      e.animTimer += dt;
+      const animInterval = e.type === 'BOSS_GOLEM' ? 0.20 : 0.16;
+      if (e.animTimer >= animInterval) {
+        e.animTimer = 0;
+        e.animFrame = (e.animFrame + 1) % (e.type === 'BOSS_GOLEM' ? 4 : 2);
+      }
+
       // Recover from temporary stun ('hurt') state for non-boss enemies
       if (e.state === 'hurt') {
         if (e.isBoss) {
@@ -2009,8 +2008,20 @@ export class GameEngine {
     e.speed = (isEnraged ? 78 : 60) + waveSpeedBonus;
 
     // Ensure Boss never gets stuck in an invalid state
-    if (e.state !== 'chase' && e.state !== 'windup' && e.state !== 'leap') {
+    if (e.state !== 'chase' && e.state !== 'windup' && e.state !== 'leap' && e.state !== 'cooldown') {
       e.state = 'chase';
+    }
+
+    if (e.state === 'cooldown') {
+      e.stateTimer -= dt;
+      e.scaleX = 0.95;
+      e.scaleY = 0.92;
+      if (e.stateTimer <= 0) {
+        e.state = 'chase';
+        e.scaleX = 1.0;
+        e.scaleY = 1.0;
+      }
+      return;
     }
 
     const distToPlayer = Math.hypot(p.x - e.x, p.y - e.y);
@@ -2023,18 +2034,18 @@ export class GameEngine {
 
       if (e.attackCooldown <= 0) {
         if (distToPlayer <= 115) {
-          // Attack 1: Titan Cleave Smash (close range devastation)
+          // Attack 1: Titan Cleave Smash (close range devastation with clear telegraph)
           e.state = 'windup';
           e.telegraphTimer = 0;
-          e.telegraphMax = isEnraged ? 0.45 : 0.65;
+          e.telegraphMax = isEnraged ? 0.65 : 0.85;
           e.targetX = 1; // 1 = Titan Cleave
           e.targetY = Math.atan2(p.y - e.y, p.x - e.x); // store direction
           audio.playTelegraph();
         } else if (distToPlayer > 180 && Math.random() < 0.55) {
-          // Attack 2: Meteor Leap Slam (long range jump attack)
+          // Attack 2: Meteor Leap Slam (long range jump attack with wide warning circle)
           e.state = 'leap';
           e.telegraphTimer = 0;
-          e.telegraphMax = isEnraged ? 0.6 : 0.85;
+          e.telegraphMax = isEnraged ? 0.9 : 1.15;
           e.targetX = p.x;
           e.targetY = p.y;
           audio.playTelegraph();
@@ -2042,7 +2053,7 @@ export class GameEngine {
           // Attack 3: Boulder Toss (throws 3 heavy rolling rocks)
           e.state = 'windup';
           e.telegraphTimer = 0;
-          e.telegraphMax = isEnraged ? 0.5 : 0.75;
+          e.telegraphMax = isEnraged ? 0.6 : 0.85;
           e.targetX = 2; // 2 = Boulder Toss
           audio.playTelegraph();
         }
@@ -2074,10 +2085,10 @@ export class GameEngine {
           diff = Math.abs(diff);
 
           if (distToPlayer <= cleaveRange && diff <= Math.PI * 0.45 && p.invulnerableTimer <= 0 && !p.isDashing) {
-            this.hurtPlayer(2); // 2 full hearts of damage!
-            // Knockback player away hard
-            p.vx += Math.cos(cleaveAngle) * 320;
-            p.vy += Math.sin(cleaveAngle) * 320;
+            this.hurtPlayer(1); // Fair 1 heart damage!
+            // Knockback player away
+            p.vx += Math.cos(cleaveAngle) * 260;
+            p.vy += Math.sin(cleaveAngle) * 260;
           }
 
           // Ground dust & crack particles
@@ -2104,8 +2115,8 @@ export class GameEngine {
               id: 'boss_cleave_' + Math.random(),
               x: e.x,
               y: e.y,
-              vx: Math.cos(ang) * (isEnraged ? 240 : 190),
-              vy: Math.sin(ang) * (isEnraged ? 240 : 190),
+              vx: Math.cos(ang) * (isEnraged ? 220 : 170),
+              vy: Math.sin(ang) * (isEnraged ? 220 : 170),
               radius: 6,
               damage: 1,
               color: isEnraged ? '#f97316' : '#06b6d4',
@@ -2124,8 +2135,8 @@ export class GameEngine {
               id: 'boulder_' + Math.random(),
               x: e.x,
               y: e.y,
-              vx: Math.cos(ang) * 170,
-              vy: Math.sin(ang) * 170,
+              vx: Math.cos(ang) * 150,
+              vy: Math.sin(ang) * 150,
               radius: 10,
               damage: 1,
               color: '#64748b',
@@ -2137,8 +2148,10 @@ export class GameEngine {
           }
         }
 
-        e.state = 'chase';
-        e.attackCooldown = isEnraged ? 0.75 : 1.15;
+        // Enter recovery window after strike!
+        e.state = 'cooldown';
+        e.stateTimer = isEnraged ? 0.95 : 1.35;
+        e.attackCooldown = isEnraged ? 1.4 : 1.8;
       }
     } else if (e.state === 'leap') {
       e.telegraphTimer += dt;
@@ -2159,19 +2172,19 @@ export class GameEngine {
         const slamRadius = 85;
         const currentDist = Math.hypot(p.x - e.x, p.y - e.y);
         if (currentDist <= slamRadius && p.invulnerableTimer <= 0 && !p.isDashing) {
-          this.hurtPlayer(2);
+          this.hurtPlayer(1);
         }
 
         // Radial shockwaves spreading outwards
-        const wavesCount = isEnraged ? 12 : 8;
+        const wavesCount = isEnraged ? 10 : 7;
         for (let i = 0; i < wavesCount; i++) {
           const ang = (i / wavesCount) * Math.PI * 2;
           this.projectiles.push({
             id: 'leap_shock_' + Math.random(),
             x: e.x,
             y: e.y,
-            vx: Math.cos(ang) * 180,
-            vy: Math.sin(ang) * 180,
+            vx: Math.cos(ang) * 160,
+            vy: Math.sin(ang) * 160,
             radius: 6,
             damage: 1,
             color: isEnraged ? '#ef4444' : '#06b6d4',
@@ -2182,8 +2195,10 @@ export class GameEngine {
           });
         }
 
-        e.state = 'chase';
-        e.attackCooldown = isEnraged ? 0.9 : 1.35;
+        // Enter recovery window after slam!
+        e.state = 'cooldown';
+        e.stateTimer = isEnraged ? 1.0 : 1.45;
+        e.attackCooldown = isEnraged ? 1.6 : 2.0;
       }
     }
   }
@@ -2222,6 +2237,27 @@ export class GameEngine {
     }
 
     this.hitstopTimer = Math.max(this.hitstopTimer, isCrit ? 0.045 : 0.025);
+
+    // Boss Golem Milestone Healing Drops (75%, 50%, 25% HP)
+    if (enemy.type === 'BOSS_GOLEM' && enemy.hp > 0) {
+      if (!enemy.milestones) enemy.milestones = new Set();
+      const hpPct = enemy.hp / enemy.maxHp;
+      if (hpPct <= 0.75 && !enemy.milestones.has(75)) {
+        enemy.milestones.add(75);
+        this.pickups.push({ id: 'heart_' + Math.random(), x: enemy.x - 22, y: enemy.y, type: 'heart', value: 1, bobTimer: 0 });
+        this.addFloatingText(enemy.x, enemy.y - 28, '+HEART DROP!', '#22c55e', 1.4, true);
+      }
+      if (hpPct <= 0.50 && !enemy.milestones.has(50)) {
+        enemy.milestones.add(50);
+        this.pickups.push({ id: 'heart_' + Math.random(), x: enemy.x + 22, y: enemy.y, type: 'heart', value: 1, bobTimer: 0 });
+        this.addFloatingText(enemy.x, enemy.y - 28, '+HEART DROP!', '#22c55e', 1.4, true);
+      }
+      if (hpPct <= 0.25 && !enemy.milestones.has(25)) {
+        enemy.milestones.add(25);
+        this.pickups.push({ id: 'heart_' + Math.random(), x: enemy.x, y: enemy.y + 24, type: 'heart', value: 1, bobTimer: 0 });
+        this.addFloatingText(enemy.x, enemy.y - 28, '+HEART DROP!', '#22c55e', 1.4, true);
+      }
+    }
 
     // Mage Spell Interruption: Striking a casting mage interrupts the rune!
     if (enemy.type === 'MAGE' && enemy.state === 'windup') {
@@ -2584,7 +2620,7 @@ export class GameEngine {
   public render(ctx: CanvasRenderingContext2D) {
     ctx.save();
     // Center viewport, scale by cameraZoom, and focus on player target with trauma screenshake
-    ctx.translate(ARENA_WIDTH / 2, ARENA_HEIGHT / 2);
+    ctx.translate(VIEW_WIDTH / 2, VIEW_HEIGHT / 2);
     ctx.scale(this.cameraZoom, this.cameraZoom);
     ctx.translate(-this.cameraFocusX + this.cameraX, -this.cameraFocusY + this.cameraY);
 
@@ -2923,99 +2959,115 @@ export class GameEngine {
 
     // 1. Centerpiece Architecture based on active theme
     if (theme.id === 'catacombs') {
-      // Ancient Stone Ritual Circle
+      // Grand Ancient Stone Ritual Circle
       ctx.save();
-      // Outer ring
+      // Outer engraved ring
       ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.arc(cx, cy, 64, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 120, 0, Math.PI * 2);
       ctx.stroke();
 
       // Middle dashed ring with ancient rune notches
       ctx.strokeStyle = '#475569';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([8, 6]);
+      ctx.lineWidth = 2;
+      ctx.setLineDash([10, 8]);
       ctx.beginPath();
-      ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 94, 0, Math.PI * 2);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Inner ring
+      // Inner glowing emerald ring
       ctx.strokeStyle = '#10b981';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(cx, cy, 32, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 62, 0, Math.PI * 2);
       ctx.stroke();
 
-      // 8-pointed engraved star
+      // 12-pointed engraved celestial star
       ctx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i < 8; i++) {
-        const ang = (i / 8) * Math.PI * 2;
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < 12; i++) {
+        const ang = (i / 12) * Math.PI * 2;
         ctx.beginPath();
         ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + Math.cos(ang) * 46, cy + Math.sin(ang) * 46);
+        ctx.lineTo(cx + Math.cos(ang) * 88, cy + Math.sin(ang) * 88);
         ctx.stroke();
+      }
+
+      // 4 Cardinal Runic Stone Plates
+      const runes = [
+        { x: cx - 94, y: cy },
+        { x: cx + 94, y: cy },
+        { x: cx, y: cy - 94 },
+        { x: cx, y: cy + 94 },
+      ];
+      for (const r of runes) {
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(r.x - 7, r.y - 7, 14, 14);
+        ctx.fillStyle = '#34d399';
+        ctx.fillRect(r.x - 4, r.y - 4, 8, 8);
+        ctx.fillStyle = '#a7f3d0';
+        ctx.fillRect(r.x - 1, r.y - 1, 2, 2);
       }
 
       // Glowing central emerald rune gem
       ctx.fillStyle = '#059669';
-      ctx.fillRect(cx - 5, cy - 5, 10, 10);
+      ctx.fillRect(cx - 9, cy - 9, 18, 18);
       ctx.fillStyle = '#34d399';
-      ctx.fillRect(cx - 3, cy - 3, 6, 6);
+      ctx.fillRect(cx - 6, cy - 6, 12, 12);
       ctx.fillStyle = '#a7f3d0';
-      ctx.fillRect(cx - 1, cy - 1, 2, 2);
+      ctx.fillRect(cx - 2, cy - 2, 4, 4);
       ctx.restore();
 
-      // Corner Sewer Grates
+      // West Crypt Sewer Drainage Grates
       const grates = [
-        { x: 100, y: ARENA_HEIGHT - 65 },
-        { x: ARENA_WIDTH - 120, y: ARENA_HEIGHT - 65 },
+        { x: 140, y: 240 },
+        { x: 140, y: ARENA_HEIGHT - 240 },
       ];
       for (const g of grates) {
         ctx.fillStyle = '#0f172a';
-        ctx.fillRect(g.x, g.y, 20, 14);
+        ctx.fillRect(g.x, g.y, 28, 18);
         ctx.fillStyle = '#475569';
-        for (let i = 2; i < 18; i += 4) {
-          ctx.fillRect(g.x + i, g.y + 1, 2, 12);
+        for (let i = 3; i < 26; i += 5) {
+          ctx.fillRect(g.x + i, g.y + 2, 2, 14);
         }
       }
     } else if (theme.id === 'magma') {
-      // Molten Lava Fissure in center floor
+      // Molten Volcanic Caldera in center floor
       ctx.save();
       // Scorched basalt crust border
       ctx.fillStyle = '#09090b';
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 65, 38, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, 130, 78, 0, 0, Math.PI * 2);
       ctx.fill();
 
       // Lava pool
       ctx.fillStyle = '#991b1b';
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 54, 28, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, 108, 60, 0, 0, Math.PI * 2);
       ctx.fill();
 
       // Hot inner molten core
       ctx.fillStyle = '#ea580c';
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 42, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, 82, 42, 0, 0, Math.PI * 2);
       ctx.fill();
 
       // Glowing magma yellow center
       ctx.fillStyle = '#fde047';
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 26, 11, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, 52, 24, 0, 0, Math.PI * 2);
       ctx.fill();
 
       // Radiating fissure cracks
       ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = 1.5;
-      const crackAngles = [0.2, 1.1, 2.3, 3.4, 4.2, 5.5];
+      ctx.lineWidth = 2;
+      const crackAngles = [0.2, 0.9, 1.8, 2.6, 3.4, 4.3, 5.1, 5.9];
       for (const ang of crackAngles) {
         ctx.beginPath();
-        ctx.moveTo(cx + Math.cos(ang) * 50, cy + Math.sin(ang) * 26);
-        ctx.lineTo(cx + Math.cos(ang) * 90, cy + Math.sin(ang) * 46);
+        ctx.moveTo(cx + Math.cos(ang) * 95, cy + Math.sin(ang) * 52);
+        ctx.lineTo(cx + Math.cos(ang) * 175, cy + Math.sin(ang) * 95);
         ctx.stroke();
       }
       ctx.restore();
@@ -3025,84 +3077,86 @@ export class GameEngine {
       // Carved jade rim
       ctx.fillStyle = '#042f2e';
       ctx.beginPath();
-      ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 115, 0, Math.PI * 2);
       ctx.fill();
 
       // Water basin
       ctx.fillStyle = '#0f766e';
       ctx.beginPath();
-      ctx.arc(cx, cy, 52, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 98, 0, Math.PI * 2);
       ctx.fill();
 
       // Iridescent turquoise water
       ctx.fillStyle = '#06b6d4';
       ctx.beginPath();
-      ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 78, 0, Math.PI * 2);
       ctx.fill();
 
       // Concentric rippling ring
       const wavePulse = (Math.sin(this.themeAnimTimer * 2) + 1) * 0.5;
       ctx.strokeStyle = 'rgba(165, 243, 252, 0.6)';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(cx, cy, 20 + wavePulse * 18, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 35 + wavePulse * 38, 0, Math.PI * 2);
       ctx.stroke();
 
       // Central sacred lotus glyph
       ctx.fillStyle = '#22d3ee';
-      ctx.fillRect(cx - 4, cy - 4, 8, 8);
+      ctx.fillRect(cx - 6, cy - 6, 12, 12);
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(cx - 2, cy - 2, 4, 4);
+      ctx.fillRect(cx - 3, cy - 3, 6, 6);
 
-      // 4 floating green lily pads
+      // 6 floating green lily pads
       const pads = [
-        { x: cx - 24, y: cy - 14 },
-        { x: cx + 22, y: cy - 16 },
-        { x: cx - 18, y: cy + 18 },
-        { x: cx + 20, y: cy + 16 },
+        { x: cx - 44, y: cy - 26 },
+        { x: cx + 42, y: cy - 30 },
+        { x: cx - 36, y: cy + 34 },
+        { x: cx + 38, y: cy + 32 },
+        { x: cx - 12, y: cy - 52 },
+        { x: cx + 16, y: cy + 50 },
       ];
       for (const p of pads) {
         ctx.fillStyle = '#059669';
-        ctx.fillRect(p.x, p.y, 8, 6);
+        ctx.fillRect(p.x, p.y, 11, 8);
         ctx.fillStyle = '#10b981';
-        ctx.fillRect(p.x + 1, p.y + 1, 6, 4);
+        ctx.fillRect(p.x + 1, p.y + 1, 9, 6);
         ctx.fillStyle = '#f43f5e';
-        ctx.fillRect(p.x + 3, p.y + 2, 2, 2);
+        ctx.fillRect(p.x + 4, p.y + 3, 3, 3);
       }
       ctx.restore();
     } else if (theme.id === 'obsidian') {
       // Royal Crimson Carpet Runner with Arcane Pentagram
       ctx.save();
-      const carpetW = 76;
+      const carpetW = 110;
       const carpetX = cx - carpetW / 2;
       ctx.fillStyle = '#4c0519';
-      ctx.fillRect(carpetX - 2, WALL_THICKNESS, carpetW + 4, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX - 3, WALL_THICKNESS, carpetW + 6, ARENA_HEIGHT - WALL_THICKNESS * 2);
       ctx.fillStyle = '#881337';
       ctx.fillRect(carpetX, WALL_THICKNESS, carpetW, ARENA_HEIGHT - WALL_THICKNESS * 2);
       ctx.fillStyle = '#9f1239';
-      ctx.fillRect(carpetX + 6, WALL_THICKNESS, carpetW - 12, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX + 8, WALL_THICKNESS, carpetW - 16, ARENA_HEIGHT - WALL_THICKNESS * 2);
 
       // Gold fringe borders
       ctx.fillStyle = '#ca8a04';
-      ctx.fillRect(carpetX + 2, WALL_THICKNESS, 2, ARENA_HEIGHT - WALL_THICKNESS * 2);
-      ctx.fillRect(carpetX + carpetW - 4, WALL_THICKNESS, 2, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX + 3, WALL_THICKNESS, 3, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX + carpetW - 6, WALL_THICKNESS, 3, ARENA_HEIGHT - WALL_THICKNESS * 2);
 
       // Arcane Violet Pentagram in center
       ctx.strokeStyle = '#c084fc';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.arc(cx, cy, 48, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 84, 0, Math.PI * 2);
       ctx.stroke();
 
       // Pentagram 5 star lines
       ctx.strokeStyle = 'rgba(232, 121, 249, 0.7)';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 2;
       ctx.beginPath();
       for (let i = 0; i < 5; i++) {
         const starIdx = (i * 2) % 5;
         const ang = (starIdx / 5) * Math.PI * 2 - Math.PI / 2;
-        const px = cx + Math.cos(ang) * 44;
-        const py = cy + Math.sin(ang) * 44;
+        const px = cx + Math.cos(ang) * 78;
+        const py = cy + Math.sin(ang) * 78;
         if (i === 0) ctx.moveTo(px, py);
         else ctx.lineTo(px, py);
       }
@@ -3111,60 +3165,65 @@ export class GameEngine {
 
       // Glowing violet core
       ctx.fillStyle = '#a855f7';
-      ctx.fillRect(cx - 5, cy - 5, 10, 10);
+      ctx.fillRect(cx - 7, cy - 7, 14, 14);
       ctx.fillStyle = '#f5d0fe';
-      ctx.fillRect(cx - 2, cy - 2, 4, 4);
+      ctx.fillRect(cx - 3, cy - 3, 6, 6);
       ctx.restore();
     } else {
       // Citadel: Imperial Red & Gold Throne Carpet with Double-Headed Sword Crest
       ctx.save();
-      const carpetW = 90;
+      const carpetW = 120;
       const carpetX = cx - carpetW / 2;
       ctx.fillStyle = '#1c1917';
-      ctx.fillRect(carpetX - 3, WALL_THICKNESS, carpetW + 6, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX - 4, WALL_THICKNESS, carpetW + 8, ARENA_HEIGHT - WALL_THICKNESS * 2);
       ctx.fillStyle = '#7f1d1d';
       ctx.fillRect(carpetX, WALL_THICKNESS, carpetW, ARENA_HEIGHT - WALL_THICKNESS * 2);
       ctx.fillStyle = '#991b1b';
-      ctx.fillRect(carpetX + 8, WALL_THICKNESS, carpetW - 16, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX + 10, WALL_THICKNESS, carpetW - 20, ARENA_HEIGHT - WALL_THICKNESS * 2);
 
       // Gold embroidery borders
       ctx.fillStyle = '#f59e0b';
-      ctx.fillRect(carpetX + 3, WALL_THICKNESS, 3, ARENA_HEIGHT - WALL_THICKNESS * 2);
-      ctx.fillRect(carpetX + carpetW - 6, WALL_THICKNESS, 3, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX + 4, WALL_THICKNESS, 4, ARENA_HEIGHT - WALL_THICKNESS * 2);
+      ctx.fillRect(carpetX + carpetW - 8, WALL_THICKNESS, 4, ARENA_HEIGHT - WALL_THICKNESS * 2);
 
       // Grand Golden Citadel Center Medallion
       ctx.strokeStyle = '#fbbf24';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.arc(cx, cy, 54, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 90, 0, Math.PI * 2);
       ctx.stroke();
 
       // Sunburst golden rays
-      ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)';
-      ctx.lineWidth = 1.5;
-      for (let i = 0; i < 12; i++) {
-        const ang = (i / 12) * Math.PI * 2;
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.55)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 16; i++) {
+        const ang = (i / 16) * Math.PI * 2;
         ctx.beginPath();
-        ctx.moveTo(cx + Math.cos(ang) * 44, cy + Math.sin(ang) * 44);
-        ctx.lineTo(cx + Math.cos(ang) * 52, cy + Math.sin(ang) * 52);
+        ctx.moveTo(cx + Math.cos(ang) * 76, cy + Math.sin(ang) * 76);
+        ctx.lineTo(cx + Math.cos(ang) * 92, cy + Math.sin(ang) * 92);
         ctx.stroke();
       }
 
       // Royal double sword crest in center
       ctx.fillStyle = '#fef08a';
-      ctx.fillRect(cx - 2, cy - 26, 4, 52);
-      ctx.fillRect(cx - 14, cy - 12, 28, 4);
+      ctx.fillRect(cx - 3, cy - 42, 6, 84);
+      ctx.fillRect(cx - 24, cy - 18, 48, 6);
       ctx.fillStyle = '#ef4444';
-      ctx.fillRect(cx - 4, cy - 4, 8, 8);
+      ctx.fillRect(cx - 6, cy - 6, 12, 12);
       ctx.restore();
     }
 
-    // 2. 4 Grand Architectural Corner Columns
+    // 2. 8 Grand Architectural Colonnade Columns
     const pillars = [
-      { x: 170, y: 150 },
-      { x: ARENA_WIDTH - 170, y: 150 },
-      { x: 170, y: ARENA_HEIGHT - 150 },
-      { x: ARENA_WIDTH - 170, y: ARENA_HEIGHT - 150 },
+      { x: 360, y: 240 },
+      { x: cx - 170, y: 240 },
+      { x: cx + 170, y: 240 },
+      { x: ARENA_WIDTH - 360, y: 240 },
+
+      { x: 360, y: ARENA_HEIGHT - 240 },
+      { x: cx - 170, y: ARENA_HEIGHT - 240 },
+      { x: cx + 170, y: ARENA_HEIGHT - 240 },
+      { x: ARENA_WIDTH - 360, y: ARENA_HEIGHT - 240 },
     ];
     for (const col of pillars) {
       ctx.save();
@@ -3204,6 +3263,7 @@ export class GameEngine {
 
   private renderWalls(ctx: CanvasRenderingContext2D) {
     const theme = this.currentTheme;
+    const cx = ARENA_WIDTH / 2;
 
     // Outer wall base
     ctx.fillStyle = theme.wallTop;
@@ -3231,7 +3291,7 @@ export class GameEngine {
     ctx.fillRect(WALL_THICKNESS, WALL_THICKNESS - 2, ARENA_WIDTH - WALL_THICKNESS * 2, 2);
 
     // Hanging Heraldic Wall Banners on Top Wall
-    const bannerPositions = [110, 250, ARENA_WIDTH - 250, ARENA_WIDTH - 110];
+    const bannerPositions = [220, 460, cx - 180, cx + 180, ARENA_WIDTH - 460, ARENA_WIDTH - 220];
     for (const bx of bannerPositions) {
       // Wood/Iron hanging rod
       ctx.fillStyle = '#64748b';

@@ -101,6 +101,7 @@ export interface Enemy {
   animTimer: number;
   isBoss?: boolean;
   bossPhase?: number;
+  milestones?: Set<number>;
 }
 
 export interface Projectile {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { gameEngine, ARENA_WIDTH, ARENA_HEIGHT } from '../game/engine';
+import { gameEngine, VIEW_WIDTH, VIEW_HEIGHT } from '../game/engine';
 
 interface GameCanvasProps {
   crtShader: boolean;
@@ -21,7 +21,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ crtShader, screenMode = 
     // Canvas render frame
     let animId: number;
     const renderTick = () => {
-      ctx.clearRect(0, 0, ARENA_WIDTH, ARENA_HEIGHT);
+      ctx.clearRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
       gameEngine.render(ctx);
       animId = requestAnimationFrame(renderTick);
     };
@@ -80,8 +80,8 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ crtShader, screenMode = 
       {/* 2D Pixel Canvas */}
       <canvas
         ref={canvasRef}
-        width={ARENA_WIDTH}
-        height={ARENA_HEIGHT}
+        width={VIEW_WIDTH}
+        height={VIEW_HEIGHT}
         className={`pixelated ${
           screenMode === 'fill'
             ? 'w-full h-full object-cover'
@@ -90,7 +90,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ crtShader, screenMode = 
         style={
           screenMode === 'fill'
             ? { width: '100%', height: '100%' }
-            : { aspectRatio: `${ARENA_WIDTH}/${ARENA_HEIGHT}` }
+            : { aspectRatio: `${VIEW_WIDTH}/${VIEW_HEIGHT}` }
         }
       />
 

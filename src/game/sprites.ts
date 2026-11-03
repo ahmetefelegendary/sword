@@ -70,11 +70,13 @@ export class SpriteRenderer {
     this.bakeMage(0, true);
     this.bakeMage(1, true);
 
-    // 6. Boss Golem (Normal and Enraged)
-    this.bakeBossGolem(false, false);
-    this.bakeBossGolem(false, true);
-    this.bakeBossGolem(true, false);
-    this.bakeBossGolem(true, true);
+    // 6. Boss Golem (4 Animated Walk & Stomp Frames, Normal and Enraged)
+    for (let f = 0; f < 4; f++) {
+      this.bakeBossGolem(f, false, false);
+      this.bakeBossGolem(f, false, true);
+      this.bakeBossGolem(f, true, false);
+      this.bakeBossGolem(f, true, true);
+    }
 
     // 7. Pickups & Props
     this.bakeHeart();
@@ -105,12 +107,21 @@ export class SpriteRenderer {
       return;
     }
 
-    const bob = frame % 2 === 1 ? 1 : 0;
-    const legOffset = frame === 1 ? 2.5 : frame === 3 ? -2.5 : 0;
-    const capeFlutter = frame === 1 ? -2 : frame === 3 ? 2 : 0;
+    // Stride parameters for unmistakable, lively arcade walking animation
+    // Frame 0: Left leg forward stride, right leg trailing back
+    // Frame 1: Center passing bounce UP (-2px), cape & plume billowing
+    // Frame 2: Right leg forward stride, left leg trailing back
+    // Frame 3: Center passing bounce DOWN (+1px), feet passing
+    const bob = frame === 1 ? -2 : frame === 3 ? 1 : 0;
+    const leftLegY = frame === 0 ? 25 : frame === 1 ? 23 : frame === 2 ? 22 : 24;
+    const rightLegY = frame === 0 ? 22 : frame === 1 ? 23 : frame === 2 ? 25 : 24;
+    const leftLegH = frame === 0 ? 7 : frame === 1 ? 5 : frame === 2 ? 4 : 5;
+    const rightLegH = frame === 0 ? 4 : frame === 1 ? 5 : frame === 2 ? 7 : 5;
+    const capeFlutter = frame === 0 ? -3 : frame === 1 ? -1 : frame === 2 ? 3 : 1;
+    const weaponSwingY = frame === 0 ? 2 : frame === 2 ? -2 : 0;
 
     if (heroClass === 'knight') {
-      // --- CAPE (Royal Crimson with Wind Flutter) ---
+      // --- CAPE (Royal Crimson with Dynamic Wind Flutter) ---
       ctx.fillStyle = '#7f1d1d';
       ctx.fillRect(4 + capeFlutter, 12 + bob, 5, 14);
       ctx.fillStyle = '#991b1b';
@@ -120,16 +131,16 @@ export class SpriteRenderer {
       ctx.fillStyle = '#f59e0b'; // golden bottom hem
       ctx.fillRect(4 + capeFlutter, 25 + bob, 5, 2);
 
-      // --- HEAVY STEEL SABATONS (Armored Feet) ---
+      // --- HEAVY STEEL SABATONS (Armored Striding Legs) ---
       ctx.fillStyle = '#1e293b';
-      ctx.fillRect(10, 24 + bob, 4, 6 + (legOffset > 0 ? -1 : 1));
-      ctx.fillRect(17, 24 + bob, 4, 6 + (legOffset < 0 ? -1 : 1));
+      ctx.fillRect(9, leftLegY + bob, 4, leftLegH);
+      ctx.fillRect(17, rightLegY + bob, 4, rightLegH);
       ctx.fillStyle = '#475569';
-      ctx.fillRect(9, 29 + bob + (legOffset > 0 ? -1 : 0), 5, 3);
-      ctx.fillRect(17, 29 + bob + (legOffset < 0 ? -1 : 0), 5, 3);
+      ctx.fillRect(9, leftLegY + leftLegH - 2 + bob, 5, 3);
+      ctx.fillRect(17, rightLegY + rightLegH - 2 + bob, 5, 3);
       ctx.fillStyle = '#94a3b8';
-      ctx.fillRect(10, 29 + bob + (legOffset > 0 ? -1 : 0), 3, 1);
-      ctx.fillRect(18, 29 + bob + (legOffset < 0 ? -1 : 0), 3, 1);
+      ctx.fillRect(10, leftLegY + leftLegH - 2 + bob, 3, 1);
+      ctx.fillRect(18, rightLegY + rightLegH - 2 + bob, 3, 1);
 
       // --- PLATE BREASTPLATE & PAULDRONS ---
       // Left and right shoulder pauldrons
@@ -171,7 +182,7 @@ export class SpriteRenderer {
       ctx.fillStyle = '#e2e8f0'; // bright metallic highlight
       ctx.fillRect(12, 4 + bob, 4, 1);
 
-      // Golden Royal Plume / Crest
+      // Golden Royal Plume / Crest (Sways with step)
       ctx.fillStyle = '#b45309';
       ctx.fillRect(14, 1 + bob, 3, 3);
       ctx.fillStyle = '#f59e0b';
@@ -192,20 +203,20 @@ export class SpriteRenderer {
 
       // --- HANDHELD WEAPON (Knight's Steel Broadsword in Right Hand) ---
       ctx.fillStyle = '#451a03'; // leather hilt
-      ctx.fillRect(25, 17 + bob, 2, 4);
+      ctx.fillRect(25, 17 + bob + weaponSwingY, 2, 4);
       ctx.fillStyle = '#f59e0b'; // golden pommel & crossguard
-      ctx.fillRect(24, 21 + bob, 4, 2);
-      ctx.fillRect(23, 16 + bob, 6, 2);
+      ctx.fillRect(24, 21 + bob + weaponSwingY, 4, 2);
+      ctx.fillRect(23, 16 + bob + weaponSwingY, 6, 2);
       ctx.fillStyle = '#dc2626'; // ruby center gem
-      ctx.fillRect(25, 16 + bob, 2, 2);
+      ctx.fillRect(25, 16 + bob + weaponSwingY, 2, 2);
       // Gleaming steel blade angled upward
       ctx.fillStyle = '#64748b';
-      ctx.fillRect(25, 6 + bob, 3, 10);
+      ctx.fillRect(25, 6 + bob + weaponSwingY, 3, 10);
       ctx.fillStyle = '#cbd5e1';
-      ctx.fillRect(25, 6 + bob, 2, 10);
+      ctx.fillRect(25, 6 + bob + weaponSwingY, 2, 10);
       ctx.fillStyle = '#ffffff'; // razor edge shine
-      ctx.fillRect(25, 5 + bob, 1, 9);
-      ctx.fillRect(26, 4 + bob, 1, 2); // sword tip
+      ctx.fillRect(25, 5 + bob + weaponSwingY, 1, 9);
+      ctx.fillRect(26, 4 + bob + weaponSwingY, 1, 2); // sword tip
 
       // --- HANDHELD HEATER SHIELD (Left Arm) ---
       ctx.fillStyle = '#1e293b';
@@ -226,13 +237,13 @@ export class SpriteRenderer {
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(6 + capeFlutter, 12 + bob, 3, 11);
 
-      // --- SLEEK ASSASSIN BOOTS ---
+      // --- SLEEK ASSASSIN BOOTS (Striding Legs) ---
       ctx.fillStyle = '#1c1917';
-      ctx.fillRect(10, 24 + bob, 4, 6 + (legOffset > 0 ? -1 : 1));
-      ctx.fillRect(17, 24 + bob, 4, 6 + (legOffset < 0 ? -1 : 1));
+      ctx.fillRect(9, leftLegY + bob, 4, leftLegH);
+      ctx.fillRect(17, rightLegY + bob, 4, rightLegH);
       ctx.fillStyle = '#292524';
-      ctx.fillRect(10, 28 + bob + (legOffset > 0 ? -1 : 0), 4, 3);
-      ctx.fillRect(17, 28 + bob + (legOffset < 0 ? -1 : 0), 4, 3);
+      ctx.fillRect(9, leftLegY + leftLegH - 2 + bob, 4, 3);
+      ctx.fillRect(17, rightLegY + rightLegH - 2 + bob, 4, 3);
 
       // --- STUDDED LEATHER JERKIN & BANDOLIER ---
       ctx.fillStyle = '#1c1917';
@@ -351,29 +362,32 @@ export class SpriteRenderer {
 
       // Slippers
       ctx.fillStyle = '#312e81';
-      ctx.fillRect(10, 26 + bob, 4, 3);
-      ctx.fillRect(17, 26 + bob, 4, 3);
+      ctx.fillRect(9, leftLegY + bob, 4, leftLegH);
+      ctx.fillRect(17, rightLegY + bob, 4, rightLegH);
+      ctx.fillStyle = '#4338ca';
+      ctx.fillRect(9, leftLegY + leftLegH - 2 + bob, 4, 2);
+      ctx.fillRect(17, rightLegY + rightLegH - 2 + bob, 4, 2);
 
       // --- WEAPONS: ANCIENT RUNIC STAFF (Right Hand) ---
       // Twisted elderwood shaft
       ctx.fillStyle = '#451a03';
-      ctx.fillRect(25, 4 + bob, 2, 24);
+      ctx.fillRect(25, 4 + bob + weaponSwingY, 2, 24);
       ctx.fillStyle = '#78350f';
-      ctx.fillRect(26, 6 + bob, 1, 20);
+      ctx.fillRect(26, 6 + bob + weaponSwingY, 1, 20);
       // Rooted prongs at head
       ctx.fillStyle = '#b45309';
-      ctx.fillRect(23, 2 + bob, 6, 2);
-      ctx.fillRect(23, 1 + bob, 2, 2);
-      ctx.fillRect(27, 1 + bob, 2, 2);
+      ctx.fillRect(23, 2 + bob + weaponSwingY, 6, 2);
+      ctx.fillRect(23, 1 + bob + weaponSwingY, 2, 2);
+      ctx.fillRect(27, 1 + bob + weaponSwingY, 2, 2);
       // Floating pulsating crystal orb
       ctx.fillStyle = '#7c3aed';
-      ctx.fillRect(23, -2 + bob, 6, 5);
+      ctx.fillRect(23, -2 + bob + weaponSwingY, 6, 5);
       ctx.fillStyle = '#a855f7';
-      ctx.fillRect(24, -3 + bob, 4, 5);
+      ctx.fillRect(24, -3 + bob + weaponSwingY, 4, 5);
       ctx.fillStyle = '#c084fc';
-      ctx.fillRect(24, -2 + bob, 3, 3);
+      ctx.fillRect(24, -2 + bob + weaponSwingY, 3, 3);
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(25, -2 + bob, 1, 1);
+      ctx.fillRect(25, -2 + bob + weaponSwingY, 1, 1);
 
       // --- LEFTHAND: FLOATING ARCANE GRIMOIRE (SPELLBOOK) ---
       ctx.fillStyle = '#581c87';
@@ -647,79 +661,89 @@ export class SpriteRenderer {
     this.cache.set(key, canvas);
   }
 
-  // --- 6. BOSS GOLEM (Massive Stone Colossus) ---
-  private bakeBossGolem(isEnraged: boolean, isFlash: boolean) {
-    const [canvas, ctx] = this.createOffscreen(56, 58);
-    const key = `boss_${isEnraged ? 'enraged' : 'normal'}_${isFlash ? 'flash' : 'normal'}`;
+  // --- 6. BOSS GOLEM (Massive Stone Colossus with 4 Animated Walk/Stomp Frames) ---
+  private bakeBossGolem(frame: number, isEnraged: boolean, isFlash: boolean) {
+    const [canvas, ctx] = this.createOffscreen(56, 60);
+    const key = `boss_${isEnraged ? 'enraged' : 'normal'}_${frame}_${isFlash ? 'flash' : 'normal'}`;
 
     if (isFlash) {
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(4, 4, 48, 50);
+      ctx.fillRect(4, 4, 48, 52);
       this.cache.set(key, canvas);
       return;
     }
 
+    // Dynamic animated walking & stomping parameters
+    const bob = frame === 1 ? -2 : frame === 3 ? 1 : 0;
+    const leftLegY = frame === 0 ? 43 : frame === 1 ? 40 : frame === 2 ? 39 : 41;
+    const rightLegY = frame === 0 ? 39 : frame === 1 ? 40 : frame === 2 ? 43 : 41;
+    const leftLegH = frame === 0 ? 11 : frame === 1 ? 14 : frame === 2 ? 15 : 13;
+    const rightLegH = frame === 0 ? 15 : frame === 1 ? 14 : frame === 2 ? 11 : 13;
+    const leftArmY = frame === 0 ? 22 : frame === 1 ? 25 : frame === 2 ? 29 : 27;
+    const rightArmY = frame === 0 ? 29 : frame === 1 ? 25 : frame === 2 ? 22 : 27;
+
     // Colossal Horned Stone Crown
     ctx.fillStyle = isEnraged ? '#7f1d1d' : '#1e293b';
-    ctx.fillRect(16, 4, 24, 15);
+    ctx.fillRect(16, 4 + bob, 24, 15);
     ctx.fillStyle = isEnraged ? '#b91c1c' : '#334155';
-    ctx.fillRect(18, 6, 20, 11);
+    ctx.fillRect(18, 6 + bob, 20, 11);
     ctx.fillStyle = isEnraged ? '#ea580c' : '#475569';
-    ctx.fillRect(13, 2, 6, 8);
-    ctx.fillRect(37, 2, 6, 8);
+    ctx.fillRect(13, 2 + bob, 6, 8);
+    ctx.fillRect(37, 2 + bob, 6, 8);
 
-    // Glowing Golem Eyes
+    // Glowing Golem Eyes (Fiercer during stride)
     ctx.fillStyle = '#090d16';
-    ctx.fillRect(20, 11, 16, 4);
+    ctx.fillRect(20, 11 + bob, 16, 4);
     ctx.fillStyle = isEnraged ? '#f97316' : '#38bdf8';
-    ctx.fillRect(22, 12, 4, 2);
-    ctx.fillRect(30, 12, 4, 2);
+    ctx.fillRect(22, 12 + bob, 4, 2);
+    ctx.fillRect(30, 12 + bob, 4, 2);
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(23, 12, 2, 2);
-    ctx.fillRect(31, 12, 2, 2);
+    ctx.fillRect(23, 12 + bob, 2, 2);
+    ctx.fillRect(31, 12 + bob, 2, 2);
 
     // Massive Stone Shoulders & Chest
     ctx.fillStyle = isEnraged ? '#3b0d0c' : '#0f172a';
-    ctx.fillRect(8, 19, 40, 22);
+    ctx.fillRect(8, 19 + bob, 40, 22);
     ctx.fillStyle = isEnraged ? '#591614' : '#334155';
-    ctx.fillRect(10, 20, 36, 20);
+    ctx.fillRect(10, 20 + bob, 36, 20);
 
-    // Glowing Rune Core in chest (Molten Lava when enraged)
-    ctx.fillStyle = isEnraged ? '#ea580c' : '#0891b2';
-    ctx.fillRect(24, 24, 8, 8);
+    // Glowing Rune Core in chest (Pulsates molten lava when enraged)
+    const corePulse = frame % 2 === 1;
+    ctx.fillStyle = isEnraged ? (corePulse ? '#f97316' : '#ea580c') : (corePulse ? '#06b6d4' : '#0891b2');
+    ctx.fillRect(24, 24 + bob, 8, 8);
     ctx.fillStyle = isEnraged ? '#fbbf24' : '#67e8f9';
-    ctx.fillRect(26, 26, 4, 4);
+    ctx.fillRect(25, 25 + bob, 6, 6);
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(27, 27, 2, 2);
+    ctx.fillRect(27, 27 + bob, 2, 2);
 
-    // Magma Cracks when enraged, or Moss/Vines when normal
+    // Magma Cracks when enraged, or Ancient Moss/Vines when normal
     if (isEnraged) {
       ctx.fillStyle = '#f97316';
-      ctx.fillRect(12, 23, 8, 2);
-      ctx.fillRect(34, 25, 8, 2);
-      ctx.fillRect(16, 32, 6, 2);
-      ctx.fillRect(30, 33, 8, 2);
+      ctx.fillRect(12, 23 + bob, 8, 2);
+      ctx.fillRect(34, 25 + bob, 8, 2);
+      ctx.fillRect(16, 32 + bob, 6, 2);
+      ctx.fillRect(30, 33 + bob, 8, 2);
     } else {
       ctx.fillStyle = '#15803d';
-      ctx.fillRect(12, 21, 5, 3);
-      ctx.fillRect(34, 22, 6, 4);
+      ctx.fillRect(12, 21 + bob, 5, 3);
+      ctx.fillRect(34, 22 + bob, 6, 4);
     }
 
-    // Giant Stone Fists
+    // Giant Heavy Stone Fists (Swinging with stomp cadence)
     ctx.fillStyle = isEnraged ? '#591614' : '#475569';
-    ctx.fillRect(4, 26, 8, 16);
-    ctx.fillRect(44, 26, 8, 16);
+    ctx.fillRect(4, leftArmY + bob, 8, 16);
+    ctx.fillRect(44, rightArmY + bob, 8, 16);
     ctx.fillStyle = isEnraged ? '#991b1b' : '#64748b';
-    ctx.fillRect(5, 36, 6, 6);
-    ctx.fillRect(45, 36, 6, 6);
+    ctx.fillRect(5, leftArmY + 10 + bob, 6, 6);
+    ctx.fillRect(45, rightArmY + 10 + bob, 6, 6);
 
-    // Heavy Stone Legs
+    // Heavy Stone Legs (Striding & Ground contact)
     ctx.fillStyle = '#1e293b';
-    ctx.fillRect(16, 41, 10, 13);
-    ctx.fillRect(30, 41, 10, 13);
+    ctx.fillRect(16, leftLegY + bob, 10, leftLegH);
+    ctx.fillRect(30, rightLegY + bob, 10, rightLegH);
     ctx.fillStyle = '#475569';
-    ctx.fillRect(15, 50, 12, 5);
-    ctx.fillRect(29, 50, 12, 5);
+    ctx.fillRect(15, leftLegY + leftLegH - 4 + bob, 12, 5);
+    ctx.fillRect(29, rightLegY + rightLegH - 4 + bob, 12, 5);
 
     this.cache.set(key, canvas);
   }
@@ -1179,13 +1203,17 @@ export class SpriteRenderer {
       attackScaleY = 1.0 - peak * 0.09;
     }
 
-    // 2. Idle Breathing Animation (Rhythmic chest expansion)
+    // 2. Idle Breathing Animation (Rhythmic chest expansion) vs Running Tilt
     let idleBobY = 0;
     let idleScaleY = 1;
+    let runTilt = 0;
     if (isIdle && !isAttacking && !isDashing) {
       const breathe = Math.sin(performance.now() * 0.0055);
       idleBobY = breathe * 0.8;
       idleScaleY = 1.0 + breathe * 0.035;
+    } else if (!isAttacking && !isDashing) {
+      // Energetic forward tilt while running
+      runTilt = (facing === 'right' ? 1 : -1) * 0.06;
     }
 
     // 3. Hurt Flinch Recoil
@@ -1202,6 +1230,8 @@ export class SpriteRenderer {
 
     if (attackLean !== 0) {
       ctx.rotate(facing === 'left' ? -attackLean : attackLean);
+    } else if (runTilt !== 0) {
+      ctx.rotate(facing === 'left' ? -runTilt : runTilt);
     }
 
     ctx.scale(attackScaleX, attackScaleY * idleScaleY);
@@ -1386,7 +1416,8 @@ export class SpriteRenderer {
       key = `mage_${f}_${isFlash ? 'flash' : 'normal'}`;
     } else if (enemy.type === 'BOSS_GOLEM') {
       const isEnraged = (enemy.hp && enemy.maxHp) ? enemy.hp <= enemy.maxHp * 0.5 : false;
-      key = `boss_${isEnraged ? 'enraged' : 'normal'}_${isFlash ? 'flash' : 'normal'}`;
+      const f = (enemy.animFrame || 0) % 4;
+      key = `boss_${isEnraged ? 'enraged' : 'normal'}_${f}_${isFlash ? 'flash' : 'normal'}`;
     }
 
     const img = this.cache.get(key);
@@ -1430,8 +1461,9 @@ export class SpriteRenderer {
     ctx.drawImage(img, x - img.width / 2, y - img.height / 2);
   }
 
-  public drawPickup(ctx: CanvasRenderingContext2D, type: 'heart' | 'coin' | 'gem', x: number, y: number, bobTimer: number) {
-    const img = this.cache.get(type);
+  public drawPickup(ctx: CanvasRenderingContext2D, type: 'heart' | 'coin' | 'gem' | 'potion', x: number, y: number, bobTimer: number) {
+    const key = type === 'potion' ? 'heart' : type;
+    const img = this.cache.get(key);
     if (!img) return;
     const bob = Math.sin(bobTimer * 4) * 3;
     ctx.drawImage(img, x - img.width / 2, y - img.height / 2 + bob);
